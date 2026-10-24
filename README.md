@@ -16,7 +16,7 @@ a partir de la base pública **PanTEon Database**.
 │   └── article/          # Artículo científico (.tex, .bib, figuras, PDF)
 ├── notebooks/            # Notebooks del pipeline y de consultas
 ├── scripts/              # Scripts reutilizables (carga, k-mers, utilidades)
-├── JOURNAL.md             # Revista elegida y normas aplicadas (pendiente)
+├── JOURNAL.md             # Revista elegida y normas aplicadas
 ├── requirements.txt
 └── README.md
 ```
@@ -50,26 +50,46 @@ pip install -r requirements.txt
 
 Descargar los dos archivos de Zenodo (ver sección Datos) y colocarlos en la raíz del proyecto.
 
-### 3. Ejecutar el pipeline
+### 3. Crear el esquema y cargar la base completa
 
 ```bash
-jupyter notebook notebooks/01_pipeline_extraccion.ipynb
+python scripts/setup_db.py       # colecciones, $jsonSchema, índices
+python scripts/load_species.py   # carga las 2790 especies del CSV
+python scripts/load_sequences.py # carga las 239,946 secuencias (~30 min, calcula k-mers k=1-6)
 ```
 
-Esto lee y limpia el FASTA y el CSV, cruza ambas fuentes, calcula los perfiles de k-mers
-(k=1 a 6) y dos atributos adicionales por secuencia, y carga todo en MongoDB mediante
-inserciones masivas (`insert_many` / `bulk_write`).
+`load_sequences.py` acepta `--limit N` para probar primero con una muestra pequeña
+antes de lanzar la carga completa (recomendado).
 
-### 4. Ejecutar consultas y generar bibliotecas / figuras
+`notebooks/01_pipeline_extraccion.ipynb` documenta el mismo pipeline paso a paso,
+pero lo demuestra sobre una muestra pequeña (300 secuencias) por el costo de tiempo
+de la carga completa — es material explicativo, no el método de carga de producción.
+
+### 4. Ejecutar consultas, generar bibliotecas y figuras
 
 ```bash
 jupyter notebook notebooks/02_consultas.ipynb
+```
+
+Resuelve las 15 consultas obligatorias + 2 propias, genera bibliotecas FASTA de
+ejemplo (`data/libraries/`) y las 4 visualizaciones de la sección 4.5
+(`docs/article/figures/`). Para generar todas las bibliotecas (las de reino son
+pesadas, decenas-cientos de MB, y no se versionan en git):
+
+```bash
+python scripts/generate_libraries.py
 ```
 
 ### 5. Ejecutar la evaluación experimental
 
 ```bash
 jupyter notebook notebooks/03_experimentos.ipynb
+```
+
+### 6. Compilar el artículo científico
+
+```bash
+tectonic docs/article/article.tex   # o pdflatex + bibtex, con texlive/miktex
 ```
 
 ## Citación de los datos
@@ -83,10 +103,16 @@ jupyter notebook notebooks/03_experimentos.ipynb
 ## Estado del proyecto
 
 - [x] Entorno configurado (MongoDB local + Python)
-- [ ] Exploración y limpieza de datos
-- [ ] Modelo de datos documental
-- [ ] Pipeline de carga (k-mers, atributos, inserciones masivas)
-- [ ] Consultas obligatorias (1–15) + 2 propias
-- [ ] Evaluación experimental de estrategias de almacenamiento
-- [ ] Visualizaciones
-- [ ] Artículo científico
+- [x] Exploración y limpieza de datos (`docs/data_quality_notes.md`)
+- [x] Modelo de datos documental (`docs/data_model.md`)
+- [x] Pipeline de carga (k-mers, atributos, inserciones masivas) — 239,946/239,946 cargadas
+- [x] Consultas obligatorias (1–15) + 2 propias (`notebooks/02_consultas.ipynb`)
+- [x] Bibliotecas FASTA generadas por consulta (especie y reino)
+- [x] Evaluación experimental de estrategias de almacenamiento (`notebooks/03_experimentos.ipynb`)
+- [x] Visualizaciones (4 figuras, `docs/article/figures/`)
+- [x] Artículo científico (`docs/article/article.pdf` + fuentes `.tex`/`.bib`)
+- [ ] **Pendiente: completar nombre(s) y correo de los autores en `docs/article/article.tex`**
+      (quedó como placeholder `[Nombre completo del/los autor(es)]`) y recompilar
+- [ ] Respaldo de la base de datos — se resuelve con el script de regeneración
+      (`setup_db.py` + `load_species.py` + `load_sequences.py`); no se incluye un
+      `mongodump` en el repo por su tamaño (~4 GB)
