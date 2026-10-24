@@ -27,3 +27,9 @@ docs/article/*.synctex.gz
 # Mongo dump grande (si se regenera localmente)
 data/backup/*.bson
 data/backup/*.json
+
+# Bibliotecas FASTA generadas (regenerables con scripts/generate_libraries.py);
+# las de especie suelen ser pequeñas y sí se versionan, las de reino no.
+data/libraries/Animalia.fasta
+data/libraries/Plantae.fasta
+data/libraries/Fungi.fasta
