@@ -1,0 +1,29 @@
+# Entorno Python
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Config local de Claude Code
+.claude/
+
+# Datos crudos pesados (no se suben a git; se descargan de Zenodo, ver README)
+PanTEon_Database_v1.6.1.fasta
+PanTEon_Database_metadata_v1.6.1.csv
+
+# Enunciados (no son parte del entregable)
+division_taller_bases_datos_ii.pdf
+proyecto-corte2-bd2-elementos-transponibles.pdf
+
+# LaTeX build artifacts
+docs/article/*.aux
+docs/article/*.log
+docs/article/*.out
+docs/article/*.toc
+docs/article/*.bbl
+docs/article/*.blg
+docs/article/*.synctex.gz
+
+# Mongo dump grande (si se regenera localmente)
+data/backup/*.bson
+data/backup/*.json
