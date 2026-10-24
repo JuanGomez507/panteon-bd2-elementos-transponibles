@@ -113,6 +113,6 @@ tectonic docs/article/article.tex   # o pdflatex + bibtex, con texlive/miktex
 - [x] Artículo científico (`docs/article/article.pdf` + fuentes `.tex`/`.bib`)
 - [ ] **Pendiente: completar nombre(s) y correo de los autores en `docs/article/article.tex`**
       (quedó como placeholder `[Nombre completo del/los autor(es)]`) y recompilar
-- [ ] Respaldo de la base de datos — se resuelve con el script de regeneración
+- [x] Respaldo de la base de datos — opción "script que la regenere"
       (`setup_db.py` + `load_species.py` + `load_sequences.py`); no se incluye un
       `mongodump` en el repo por su tamaño (~4 GB)
