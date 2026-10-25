@@ -111,8 +111,7 @@ tectonic docs/article/article.tex   # o pdflatex + bibtex, con texlive/miktex
 - [x] Evaluación experimental de estrategias de almacenamiento (`notebooks/03_experimentos.ipynb`)
 - [x] Visualizaciones (4 figuras, `docs/article/figures/`)
 - [x] Artículo científico (`docs/article/article.pdf` + fuentes `.tex`/`.bib`)
-- [ ] **Pendiente: completar nombre(s) y correo de los autores en `docs/article/article.tex`**
-      (quedó como placeholder `[Nombre completo del/los autor(es)]`) y recompilar
+- [x] Autores y correos en el artículo
 - [x] Respaldo de la base de datos — opción "script que la regenere"
       (`setup_db.py` + `load_species.py` + `load_sequences.py`); no se incluye un
       `mongodump` en el repo por su tamaño (~4 GB)

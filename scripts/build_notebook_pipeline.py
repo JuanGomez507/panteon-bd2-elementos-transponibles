@@ -98,19 +98,47 @@ md("""## 3. Cruce FASTA ↔ CSV por especie
 
 Se normaliza el nombre de especie (minúsculas, sin puntos) para resolver el caso
 de `subsp.`/`sp.` con y sin punto encontrado en la exploración inicial, y se
-reportan las especies de cada lado que no logran cruzar.""")
+reportan las especies de cada lado que no logran cruzar.
+
+A diferencia del resto del notebook, este paso se hace sobre el **FASTA
+completo**: solo se leen los encabezados (no las secuencias ni los k-mers), así
+que recorrer las 239,946 entradas toma segundos. Se compara en ambas
+direcciones (FASTA → CSV y CSV → FASTA), primero con los nombres tal como
+vienen y luego con la llave normalizada.""")
 code("""from clean_csv import species_match_key
 
-csv_species = set(df["species"].apply(species_match_key))
+# Especies de TODO el FASTA, leyendo solo las líneas de encabezado.
+fasta_species_raw = set()
+n_headers = 0
+with open("../PanTEon_Database_v1.6.1.fasta", "r", encoding="utf-8", errors="replace") as f:
+    for line in f:
+        if line.startswith(">"):
+            n_headers += 1
+            m = HEADER_RE.match(line.rstrip())
+            if m:
+                fasta_species_raw.add(m.group(5).strip())
 
-sample_species = set()
-for header, _ in sample:
-    m = HEADER_RE.match(header)
-    if m:
-        sample_species.add(species_match_key(m.group(5)))
+csv_species_raw = set(df["species"])
+print("Encabezados leídos:", n_headers)
+print("Especies distintas -> FASTA:", len(fasta_species_raw), " CSV:", len(csv_species_raw))
 
-print("Especies distintas en la muestra FASTA:", len(sample_species))
-print("En la muestra pero no en el CSV:", sample_species - csv_species)""")
+print()
+print("Sin normalizar:")
+print("  En el FASTA pero no en el CSV:", sorted(fasta_species_raw - csv_species_raw))
+print("  En el CSV pero no en el FASTA:", sorted(csv_species_raw - fasta_species_raw))
+
+fasta_keys = {species_match_key(s) for s in fasta_species_raw}
+csv_keys = set(df["match_key"])
+print()
+print("Con la llave normalizada (minúsculas, sin puntos):")
+print("  En el FASTA pero no en el CSV:", sorted(fasta_keys - csv_keys))
+print("  En el CSV pero no en el FASTA:", sorted(csv_keys - fasta_keys))""")
+md("""**Resultado:** sin normalizar, 4 especies no cruzan en cada dirección, y son
+las mismas en ambos lados escritas con y sin punto (`subsp.`/`subsp`,
+`sp.`/`sp`). Con la llave normalizada, las 2790 especies cruzan en ambas
+direcciones y no queda ninguna huérfana. Por eso la carga
+(`load_sequences.py`) busca la especie por `match_key` y no por el nombre
+original.""")
 
 # --------------------------------------------------------------------------
 md("""## 4. Cálculo de k-mers (k=1–6) y atributos adicionales

@@ -34,3 +34,6 @@ data/backup/*.json
 # Plantae (~646 MB) se excluyen y se regeneran con el script.
 data/libraries/Animalia.fasta
 data/libraries/Plantae.fasta
+
+# Respaldo mongodump completo (~2.3 GB, supera el limite de GitHub)
+data/backup/dump/

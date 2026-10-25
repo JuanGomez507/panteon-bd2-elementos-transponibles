@@ -1,41 +1,135 @@
 \documentclass[10pt,letterpaper]{article}
+\usepackage[top=0.85in,left=2.75in,footskip=0.75in]{geometry}
 
-\usepackage[top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm]{geometry}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{lmodern}
-\usepackage{setspace}
-\usepackage{lineno}
-\usepackage{graphicx}
-\usepackage{booktabs}
+% amsmath and amssymb packages, useful for mathematical formulas and symbols
+\usepackage{amsmath,amssymb}
+
+% Use adjustwidth environment to exceed column width (see example table in text)
+\usepackage{changepage}
+
+% textcomp package and marvosym package for additional characters
+\usepackage{textcomp,marvosym}
+
+% cite package, to clean up citations in the main text. Do not remove.
+\usepackage{cite}
+
+% Use nameref to cite supporting information files (see Supporting Information section for more info)
+\usepackage{nameref,hyperref}
+
+% line numbers
+\usepackage[right]{lineno}
+
+% ligatures disabled
+\usepackage[nopatch=eqnum]{microtype}
+% \DisableLigatures solo existe en pdfLaTeX; se omite al compilar con XeTeX (tectonic).
+\usepackage{iftex}
+\ifPDFTeX
+\DisableLigatures[f]{encoding = *, family = * }
+\fi
+
+% color can be used to apply background shading to table cells only
+\usepackage[table]{xcolor}
+
+% array package and thick rules for tables
 \usepackage{array}
-\usepackage{amsmath}
-\usepackage{xcolor}
-\usepackage[numbers,sort&compress]{natbib}
-\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
 
-\newcommand{\shorttitle}{Modelo documental en MongoDB para elementos transponibles}
+% create "+" rule type for thick vertical lines
+\newcolumntype{+}{!{\vrule width 2pt}}
 
-\title{\textbf{Un modelo de datos documental en MongoDB para integrar secuencias, taxonomía y perfiles de k-mers de elementos transponibles a través de reinos}}
-
-\author{
-  [Nombre completo del/los autor(es)]\\
-  \small Programa de Ingeniería de Sistemas y Telecomunicaciones, Universidad Autónoma de Manizales\\
-  \small Curso: Bases de Datos II --- Docente: Simón Gaviria Orrego\\
-  \small \texttt{[correo institucional]}
+% create \thickcline for thick horizontal lines of variable length
+\newlength\savedwidth
+\newcommand\thickcline[1]{%
+  \noalign{\global\savedwidth\arrayrulewidth\global\arrayrulewidth 2pt}%
+  \cline{#1}%
+  \noalign{\vskip\arrayrulewidth}%
+  \noalign{\global\arrayrulewidth\savedwidth}%
 }
-\date{}
+
+% \thickhline command for thick horizontal lines that span the table
+\newcommand\thickhline{\noalign{\global\savedwidth\arrayrulewidth\global\arrayrulewidth 2pt}%
+\hline
+\noalign{\global\arrayrulewidth\savedwidth}}
+
+
+% Remove comment for double spacing
+%\usepackage{setspace} 
+%\doublespacing
+
+% Text layout
+\raggedright
+\setlength{\parindent}{0.5cm}
+\textwidth 5.25in
+\textheight 8.75in
+
+% Bold the 'Figure #' in the caption and separate it from the title/caption with a period
+% Captions will be left justified
+\usepackage[aboveskip=1pt,labelfont=bf,labelsep=period,justification=raggedright,singlelinecheck=off]{caption}
+\renewcommand{\figurename}{Fig}
+
+% Please use the included `plos2025.bst` as your BibTeX style
+\bibliographystyle{plos2025}
+
+% Remove brackets from numbering in List of References
+\makeatletter
+\renewcommand{\@biblabel}[1]{\quad#1.}
+\makeatother
+
+
+
+% Header and Footer with logo
+\usepackage{lastpage,fancyhdr,graphicx}
+\usepackage{epstopdf}
+%\pagestyle{myheadings}
+\pagestyle{fancy}
+\fancyhf{}
+%\setlength{\headheight}{27.023pt}
+%\lhead{\includegraphics[width=2.0in]{PLOS-submission.eps}}
+\rfoot{\thepage/\pageref{LastPage}}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrule}{\hrule height 2pt \vspace{2mm}}
+\fancyheadoffset[L]{2.25in}
+\fancyfootoffset[L]{2.25in}
+\lfoot{\today}
+
+%% Include all user-defined macros below
+
+% El artículo está en español (permitido por el enunciado del taller); PLOS
+% exige "Fig" para las figuras, y las tablas se nombran "Tabla" para que
+% coincidan con las referencias del texto.
+\renewcommand{\tablename}{Tabla}
+
+%% END MACROS SECTION
+
 
 \begin{document}
+\vspace*{0.2in}
 
-\renewcommand{\figurename}{Fig}
-\doublespacing
-\linenumbers
+% Title must be 250 characters or less.
+\begin{flushleft}
+{\Large
+\textbf{Un modelo de datos documental en MongoDB para integrar secuencias, taxonomía y perfiles de k-mers de elementos transponibles a través de reinos}
+}
+\newline
+% Insert author names, affiliations and corresponding author email (do not include titles, positions, or degrees).
+\\
+Mateo Quintero Morales\textsuperscript{1\Yinyang*},
+Tomás Restrepo Chica\textsuperscript{1\Yinyang*},
+Juan David Gómez Tangarife\textsuperscript{1\Yinyang*}
+\\
+\bigskip
+\textbf{1} Programa de Ingeniería de Sistemas y Telecomunicaciones, Universidad Autónoma de Manizales, Manizales, Caldas, Colombia
+\\
+\bigskip
 
-\maketitle
+% Primary Equal Contribution Note
+\Yinyang Estos autores contribuyeron por igual a este trabajo.
 
-\begin{abstract}
-\noindent
+% Use the asterisk to denote corresponding authorship and provide email address in note below.
+* mateoq152006@gmail.com, tomas.restrepoc@autonoma.edu.co, juand.gomezt@autonoma.edu.co
+
+\end{flushleft}
+% Please keep the abstract below 300 words
+\section*{Resumen}
 Los elementos transponibles (TEs) ocupan una fracción enorme de los genomas
 eucariotas e influyen en la evolución y la regulación génica, pero integrar sus
 secuencias, su taxonomía de origen y sus perfiles de composición es un reto de
@@ -52,15 +146,16 @@ usados como "especie"), se resuelven quince consultas y dos preguntas de
 investigación propias mediante agregaciones de MongoDB, y se evalúa
 experimentalmente el almacenamiento embebido frente a una colección aparte
 para los k-mers, midiendo tiempo de carga, espacio en disco y tiempo de
-consulta con y sin índice. El almacenamiento embebido resultó entre uno y dos
-órdenes de magnitud más rápido en consultas sin índice y operacionalmente más
-simple para el patrón de acceso del proyecto, a costa de documentos más
-pesados. El código, el modelo y los resultados completos están disponibles en
+consulta con y sin índice. Con índice, ambas estrategias resolvieron las
+consultas puntuales en menos de un milisegundo; sin índice, todas cayeron en
+un recorrido completo de la colección y fueron entre 40 y 60 veces más
+lentas. El almacenamiento embebido resultó operacionalmente más simple para el
+patrón de acceso del proyecto (una consulta en vez de dos), mientras que la
+colección aparte ocupó menos espacio en disco por una mejor compresión. El código, el modelo y los resultados completos están disponibles en
 un repositorio público.
-\end{abstract}
 
+% Please keep the Author Summary between 150 and 200 words. Use first person.
 \section*{Resumen para el lector no especializado}
-\noindent
 El ADN de casi todos los seres vivos contiene millones de fragmentos
 repetitivos llamados elementos transponibles, capaces de copiarse y moverse
 dentro del genoma. Entender cómo se distribuyen estos fragmentos entre especies
@@ -73,7 +168,12 @@ investigadores puedan hacer preguntas complejas sobre estos datos de forma
 rápida. Documentamos los problemas reales que encontramos en los datos
 públicos que usamos, explicamos por qué organizamos la información de una
 manera y no de otra, y medimos con datos propios ---no solo intuición--- cuál
-estrategia de organización es más conveniente.
+estrategia de organización es más conveniente. Todo el código queda disponible
+para que cualquiera pueda repetir el trabajo.
+
+\clearpage
+\newgeometry{top=0.85in,left=1in,right=1in,footskip=0.75in}
+\linenumbers
 
 \section*{Introducción}
 
@@ -114,6 +214,36 @@ representan dos jerarquías con nombres de campo que se prestan a confusión, y
 cómo se almacenan perfiles de k-mers dispersos de forma eficiente --- y
 respaldar esas decisiones con medidas propias de rendimiento y almacenamiento,
 no solo con intuición.
+
+\section*{Trabajo relacionado}
+
+Las bases de datos de TEs de referencia difieren tanto en qué almacenan como
+en cómo lo organizan. \textbf{Repbase}~\cite{bao2015repbase} es una de las
+colecciones más antiguas de secuencias consenso de elementos repetitivos
+eucariotas; se distribuye como archivos de secuencias anotadas, agrupados por
+grupo taxonómico, y su clasificación usa nombres propios que no siempre
+coinciden con el esquema de Wicker et al.~\cite{wicker2007}.
+\textbf{Dfam}~\cite{storer2021dfam} organiza los TEs por \emph{familias}: cada
+familia tiene una secuencia consenso y un modelo de perfil (HMM), anotaciones
+sobre genomas y un vínculo a la taxonomía de las especies donde se
+encuentra, e incluye tanto familias curadas por expertos como familias
+generadas automáticamente. En ambas, la unidad central es la familia de TE y
+no la secuencia individual, y ninguna almacena perfiles de k-mers.
+
+\textbf{PanTEon}~\cite{orozco2026panteon,panteon2026zenodo}, la fuente de este
+trabajo, reúne bibliotecas de TEs de animales, plantas y hongos ---provenientes
+de Dfam o generadas con RepeatModeler2~\cite{flynn2020repeatmodeler2} y
+MCHelper--- con un objetivo distinto: servir como conjunto de datos para
+diseñar y entrenar clasificadores de TEs. Se distribuye como dos archivos
+planos: un FASTA cuyas secuencias llevan la clasificación
+Clase/Orden/Superfamilia y la especie en el encabezado, y un CSV con la
+taxonomía y el origen de cada biblioteca. Esa forma es cómoda para distribuir
+los datos, pero no permite consultarlos directamente: cruzar una secuencia con
+la taxonomía de su especie, filtrar por reino o recuperar el perfil de k-mers
+de un elemento exige leer y procesar los archivos completos cada vez. El
+presente trabajo parte de esa distribución y la convierte en una base de datos
+consultable, en la que los perfiles de k-mers ---la representación que usan
+los clasificadores--- quedan almacenados junto a cada secuencia.
 
 \section*{Materiales y métodos}
 
@@ -170,6 +300,16 @@ nucleótidos, tres atributos derivados (\texttt{length}, \texttt{gc\_content},
 \texttt{n\_percentage}) y los perfiles de k-mers embebidos en
 \texttt{kmers.k1}\ldots\texttt{kmers.k6}.
 
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig0_modelo_datos.png}
+\caption{\textbf{Modelo de datos.} Dos colecciones de producción
+(\texttt{species}, \texttt{sequences}) relacionadas por referencia, y una
+colección auxiliar (\texttt{kmer\_profiles\_alt}) usada solo en el experimento
+descrito en \nameref{sec:experimentos}.}
+\label{fig:modelo}
+\end{figure}
+
 Dos decisiones de diseño merecen justificación explícita:
 
 \textbf{Referencia, no embebido, entre secuencia y especie.} Se consideró
@@ -199,20 +339,19 @@ esperado --- verificada insertando deliberadamente un documento inválido. Los
 índices creados y la consulta que justifica cada uno se listan en la
 Tabla~\ref{tab:indices}.
 
-\begin{table}[h]
+\begin{table}[!ht]
 \centering
-\caption{{\bf Índices del modelo de producción.}}
-\begin{tabular}{p{3.6cm}p{2.1cm}p{7.8cm}}
-\toprule
-Índice & Colección & Consulta que soporta \\
-\midrule
+\caption{\textbf{Índices del modelo de producción.}}
+\begin{tabular}{|p{3.6cm}|p{2.1cm}|p{7.8cm}|}
+\hline
+\textbf{Índice} & \textbf{Colección} & \textbf{Consulta que soporta} \\ \thickhline
 \texttt{species\_name} (único) & species & Unicidad; cruce por nombre \\
 \texttt{match\_key} & species & Cruce FASTA$\leftrightarrow$CSV durante la carga \\
 \texttt{kingdom} & species & Agrupar/filtrar por reino \\
 \texttt{original\_id} (único) & sequences & Búsqueda por identificador; unicidad \\
 \texttt{species\_id} & sequences & \texttt{\$lookup} con species; conteos por especie \\
 (\texttt{te\_class}, \texttt{te\_order}, \texttt{te\_superfamily}) & sequences & Conteos por clasificación; filtros de biblioteca \\
-\bottomrule
+\hline
 \end{tabular}
 \label{tab:indices}
 \end{table}
@@ -238,13 +377,22 @@ repositorio sobre los dos archivos descargados de Zenodo.
 Para evaluar la decisión de embeber los k-mers se comparó esa estrategia
 contra una \textbf{colección aparte} (metadatos de la secuencia en una
 colección, k-mers en otra, referenciados por \texttt{sequence\_id}), sobre una
-muestra aleatoria de 30{,}000 secuencias \emph{ya cargadas} --- es decir, con
-los k-mers ya calculados --- para aislar el costo de la estrategia de
-almacenamiento del costo de calcular los k-mers. Para cada estrategia se
-midió: tiempo de carga (\texttt{bulk\_write}), espacio en disco
-(\texttt{collStats}) y el tiempo de tres consultas representativas con y sin
-índice (ocultando el índice correspondiente con \texttt{collMod}, usando
-\texttt{explain()} para confirmar los documentos examinados).
+muestra de 30{,}000 secuencias \emph{ya cargadas} --- es decir, con los k-mers
+ya calculados --- para aislar el costo de la estrategia de almacenamiento del
+costo de calcular los k-mers. La muestra es reproducible: los identificadores
+se eligen al azar con una semilla fija. Para cada estrategia se midió el
+tiempo de carga (\texttt{bulk\_write}), el espacio en disco
+(\texttt{collStats}) y tres consultas representativas: (Q1) el perfil de
+6-mers de una secuencia, (Q2) los perfiles de 6-mers de todas las secuencias
+de una especie y (Q3) los metadatos junto con el perfil completo de una
+secuencia. Cada consulta se ejecutó con y sin índice; para la versión sin
+índice, los índices secundarios se ocultaron con \texttt{collMod}
+(\texttt{hidden:\,true}), lo que obliga al planificador a recorrer la
+colección sin tener que borrar ni reconstruir el índice. Cada consulta se
+analizó con \texttt{explain} en verbosidad \texttt{executionStats} (plan
+elegido, documentos y llaves examinados, tiempo en el servidor) y se midió
+además su tiempo desde el cliente; se reporta la mediana de tres
+repeticiones.
 
 \section*{Resultados}
 
@@ -259,13 +407,12 @@ Tabla~\ref{tab:composicion} resume la composición por clase y orden de TE
 frente a 45{,}172 (18.8\%) de CLASSII (transposones de ADN); LTR es el orden
 más abundante (119{,}368), seguido de LINE (68{,}382).
 
-\begin{table}[h]
+\begin{table}[!ht]
 \centering
-\caption{{\bf Cantidad de TEs por clase y orden (consulta 1).}}
-\begin{tabular}{lrr}
-\toprule
-Clase & Orden & Cantidad \\
-\midrule
+\caption{\textbf{Cantidad de TEs por clase y orden (consulta 1).}}
+\begin{tabular}{|l|r|r|}
+\hline
+\textbf{Clase} & \textbf{Orden} & \textbf{Cantidad} \\ \thickhline
 CLASSI  & LTR       & 119{,}368 \\
 CLASSI  & LINE      & 68{,}382 \\
 CLASSII & TIR       & 36{,}471 \\
@@ -277,10 +424,10 @@ CLASSI  & PLE       & 344 \\
 CLASSII & CRYPTON   & 112 \\
 CLASSII & RETROPOSON& 113 \\
 CLASSII & MAVERICK  & 58 \\
-\midrule
+\hline
 \textbf{Total CLASSI}  & & \textbf{194{,}774} \\
 \textbf{Total CLASSII} & & \textbf{45{,}172} \\
-\bottomrule
+\hline
 \end{tabular}
 \label{tab:composicion}
 \end{table}
@@ -295,20 +442,10 @@ Las 10 especies con más TEs están encabezadas por \emph{Malus domestica}
 exactamente 1 TE registrado, consistente con bibliotecas de anotación
 preliminar más que con genomas realmente pobres en TEs.
 
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.85\textwidth]{figures/fig0_modelo_datos.png}
-\caption{{\bf Modelo de datos.} Dos colecciones de producción
-(\texttt{species}, \texttt{sequences}) relacionadas por referencia, y una
-colección auxiliar (\texttt{kmer\_profiles\_alt}) usada solo en el experimento
-de la sección de Materiales y métodos.}
-\label{fig:modelo}
-\end{figure}
-
-\begin{figure}[h]
+\begin{figure}[!h]
 \centering
 \includegraphics[width=0.95\textwidth]{figures/fig1_composicion_por_reino.png}
-\caption{{\bf Composición de elementos transponibles por orden y reino.}
+\caption{\textbf{Composición de elementos transponibles por orden y reino.}
 Cantidad absoluta de TEs de cada orden en Animalia, Plantae y Fungi, calculada
 con una agregación \texttt{\$lookup} + \texttt{\$group} sobre las 239{,}946
 secuencias.}
@@ -328,19 +465,19 @@ alto ($\sim$53\%) y TIR/MAVERICK el más bajo ($\sim$40\%). El TE más largo de
 toda la base (19{,}926~nt, orden LTR/GYPSY) pertenece a \emph{Helianthus
 annuus}; los más cortos (81--100~nt) aparecen en los tres reinos (consulta~7).
 
-\begin{figure}[h]
+\begin{figure}[!h]
 \centering
 \includegraphics[width=0.95\textwidth]{figures/fig2_longitud_por_orden.png}
-\caption{{\bf Distribución de la longitud de los TEs por orden.} Cajas
+\caption{\textbf{Distribución de la longitud de los TEs por orden.} Cajas
 construidas con cuartiles calculados en MongoDB (\texttt{\$percentile},
 P5--P95), sin necesidad de extraer los datos crudos.}
 \label{fig:longitud}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[!h]
 \centering
 \includegraphics[width=0.6\textwidth]{figures/fig3_gc_por_reino.png}
-\caption{{\bf Contenido GC por reino (P5--P95).}}
+\caption{\textbf{Contenido GC por reino (P5--P95).}}
 \label{fig:gc}
 \end{figure}
 
@@ -376,10 +513,10 @@ en la consulta~8 junto con su taxonomía completa vía \texttt{\$lookup}) el
 perfil de 2-mers tiene presentes las 16 combinaciones posibles, con AA (306) y
 TT (234) como las más frecuentes.
 
-\begin{figure}[h]
+\begin{figure}[!h]
 \centering
 \includegraphics[width=0.95\textwidth]{figures/fig4_heatmap_kmers2.png}
-\caption{{\bf Frecuencia relativa promedio de 2-mers por orden de TE.} Cada
+\caption{\textbf{Frecuencia relativa promedio de 2-mers por orden de TE.} Cada
 celda es el promedio, sobre todas las secuencias de ese orden, del conteo de
 un dinucleótido dividido entre el total de 2-mers de la secuencia.}
 \label{fig:heatmap}
@@ -387,45 +524,59 @@ un dinucleótido dividido entre el total de 2-mers de la secuencia.}
 
 \subsection*{Evaluación experimental: embebido frente a colección aparte}\label{sec:resultados-exp}
 
-Sobre la muestra de 30{,}000 secuencias, el espacio en disco total fue similar
-entre ambas estrategias (509.1~MB embebido frente a 499.6~MB en colección
-aparte, Tabla~\ref{tab:benchmark}) porque en ambas la secuencia de nucleótidos
---- el campo más pesado --- se guarda una sola vez. La diferencia decisiva
-aparece en las consultas \textbf{sin índice}: escanear la colección embebida
-(documentos grandes, con la secuencia completa y los 6 perfiles de k-mers)
-para encontrar una secuencia por su \texttt{original\_id} tomó 3.15~s,
-examinando los 30{,}000 documentos; la misma búsqueda sobre la colección
-aparte (documentos pequeños, solo k-mers) tomó 0.035~s --- casi 90 veces más
-rápido. \textbf{Con índice}, ambas estrategias resuelven la búsqueda puntual en
-1--2~ms examinando un solo documento, por lo que esta diferencia desaparece
-en el modelo de producción (que sí tiene el índice sobre \texttt{original\_id}).
+Sobre la muestra de 30{,}000 secuencias (Tabla~\ref{tab:benchmark}), la carga
+embebida tomó 9.7~s frente a 13.5~s de la colección aparte, que hace el doble
+de escrituras y mantiene un índice adicional. El tamaño lógico de los datos
+fue prácticamente el mismo en ambas estrategias (1128~MB frente a 1129~MB sin
+comprimir), pero el espacio real en disco fue menor en la colección aparte
+(372~MB frente a 507~MB): al separar los k-mers, cada colección guarda
+documentos más homogéneos y la compresión de WiredTiger es más efectiva.
 
-\begin{table}[h]
+El índice resultó mucho más determinante que la estrategia de
+almacenamiento. \textbf{Con índice}, las tres consultas usaron un plan
+\texttt{IXSCAN} y examinaron solo los documentos que devuelven; las
+consultas puntuales Q1 y Q3 tardaron menos de un milisegundo en ambas
+estrategias. \textbf{Sin índice}, todas cayeron en un \texttt{COLLSCAN} que
+examinó la colección completa (30{,}000 documentos en el modelo embebido y
+60{,}000 en la colección aparte, que recorre dos colecciones), y Q1 pasó de
+0.33~ms a 19.2~ms en el modelo embebido ---unas 58 veces más lenta--- y de
+0.64~ms a 29.2~ms en la colección aparte. En Q2, el tiempo en el servidor
+pasó de 1~ms a 24--37~ms al quitar el índice; en el cliente la diferencia es
+menor (41~ms frente a 67~ms en el modelo embebido) porque la mayor parte del
+costo está en transferir y decodificar los 179 perfiles de 6-mers devueltos,
+no en encontrarlos.
+
+\begin{table}[!ht]
 \centering
-\caption{{\bf Comparación embebido vs. colección aparte (muestra de 30{,}000 secuencias).}}
-\begin{tabular}{lrr}
-\toprule
-Métrica & Embebido & Colección aparte \\
-\midrule
-Tiempo de carga (s) & 14.65 & 20.52 \\
-Espacio en disco (MB) & 509.12 & 499.62 (66.16 + 433.46) \\
-Índices (MB) & 0.77 & 1.82 \\
-Búsqueda puntual, con índice (s) & 0.00239 & 0.00163 \\
-Búsqueda puntual, sin índice (s) & 3.15198 & 0.03458 \\
-Suma global de un k-mer, agregación (s) & 0.45263 & 0.33266 \\
-Metadatos + k-mers de una secuencia (s) & 0.00170 (1 consulta) & 0.00112 (2 consultas) \\
-\bottomrule
+\caption{\textbf{Comparación embebido vs. colección aparte (muestra de 30{,}000 secuencias).}
+Tiempos medidos desde el cliente (mediana de 3 repeticiones); entre
+paréntesis, documentos examinados según \texttt{explain("executionStats")}.}
+\begin{tabular}{|l|r|r|}
+\hline
+\textbf{Métrica} & \textbf{Embebido} & \textbf{Colección aparte} \\ \thickhline
+Tiempo de carga (s) & 9.67 & 13.50 \\
+Espacio en disco (MB) & 506.59 & 372.26 (43.90 + 328.37) \\
+Tamaño lógico sin comprimir (MB) & 1128.02 & 1129.43 \\
+Índices (MB) & 1.00 & 2.00 \\
+\hline
+Q1 perfil de una secuencia, con índice (ms) & 0.33 (1) & 0.64 (2) \\
+Q1 perfil de una secuencia, sin índice (ms) & 19.18 (30{,}000) & 29.23 (60{,}000) \\
+Q2 perfiles de una especie, con índice (ms) & 41.38 (179) & 48.14 (358) \\
+Q2 perfiles de una especie, sin índice (ms) & 66.58 (30{,}000) & 81.46 (60{,}000) \\
+Q3 metadatos + perfil, con índice (ms) & 0.42 (1) & 0.74 (2) \\
+Q3 metadatos + perfil, sin índice (ms) & 18.97 (30{,}000) & 29.62 (60{,}000) \\
+\hline
+Suma global de un 6-mer, agregación (ms) & 337.31 (30{,}000) & 327.02 (30{,}000) \\
+\hline
 \end{tabular}
 \label{tab:benchmark}
 \end{table}
 
-Para el caso de uso combinado --- traer los metadatos de una secuencia junto
-con su perfil de k-mers, el patrón de acceso más común del proyecto --- el
-modelo embebido lo resuelve con una sola consulta, mientras que la colección
-aparte necesita dos consultas secuenciales; a esta escala la diferencia de
-tiempo medida fue pequeña e incluso ligeramente favorable a la colección
-aparte en términos de latencia bruta, pero a costa de duplicar la complejidad
-operacional del código cliente.
+En las tres consultas, la colección aparte necesitó dos consultas
+secuenciales donde el modelo embebido usó una, y fue algo más lenta tanto con
+índice como sin él. La única operación en la que la colección aparte fue
+ligeramente más rápida es la agregación global sobre un k-mer (327~ms frente
+a 337~ms), que lee todos los documentos y no se beneficia de ningún índice.
 
 \section*{Discusión}
 
@@ -433,14 +584,16 @@ Los resultados respaldan la decisión de diseño de embeber los k-mers junto a
 su secuencia: dado que nunca se consultan de forma aislada ni se comparten
 entre secuencias, una colección aparte solo añade una referencia y un segundo
 \emph{round-trip} sin beneficio claro para este patrón de acceso, y con el
-índice correcto el costo de documentos más pesados queda completamente
-mitigado. La colección aparte solo mostraría ventaja real en un escenario
-distinto al de este proyecto: un servicio que escanea o agrega k-mers con
-mucha frecuencia \emph{sin} tocar nunca la secuencia completa, donde evitar
-cargar ese campo en cada documento leído ahorraría E/S de forma sistemática.
-Este hallazgo generaliza una intuición común en el modelado de documentos
---- "lo que se lee junto, se guarda junto" --- con una medida concreta de cuánto
-cuesta no seguirla quando no hay índice de apoyo (90$\times$ en este caso).
+índice correcto el modelo embebido fue el más rápido en las tres consultas
+medidas. A cambio, ocupa más espacio en disco: la colección aparte se
+comprimió mejor y ahorró cerca de una cuarta parte del almacenamiento. Esa
+ventaja, junto con su leve ventaja en la agregación global, solo pesaría en un
+escenario distinto al de este proyecto: un servicio que agrega k-mers con
+mucha frecuencia \emph{sin} necesitar nunca la secuencia ni sus metadatos.
+El experimento también muestra que la decisión más importante no es dónde
+guardar los k-mers sino qué índices crear: sin ellos, cualquiera de las dos
+estrategias recorre la colección completa y las consultas puntuales se
+vuelven entre 40 y 60 veces más lentas.
 
 La exploración de calidad de datos fue, en sí misma, una parte sustancial del
 trabajo de diseño. Los valores faltantes codificados como texto libre en
@@ -457,22 +610,43 @@ la naturaleza real, incompleta, de los metadatos taxonómicos disponibles.
 
 \textbf{Limitaciones.} El experimento de almacenamiento se corrió sobre una
 muestra de 30{,}000 secuencias (12.5\% de la base), no sobre las 239{,}946
-completas, por restricciones de tiempo; aunque no hay razón para esperar que
-la proporción cambie cualitativamente a mayor escala, una validación sobre la
-base completa sería el siguiente paso natural. El umbral de 5\% de contenido N
+completas, por restricciones de tiempo. El umbral de 5\% de contenido N
 usado en el control de calidad es una elección heurística propia, no un
 estándar de la literatura. Finalmente, el cruce de especies se resolvió por
 normalización de texto (minúsculas, sin puntos); una especie con un error
 ortográfico genuino en una sola fuente no sería detectada por este método y
 quedaría, silenciosamente, sin cruzar.
 
+\textbf{Amenazas a la validez.} \emph{Validez interna:} todas las mediciones
+se hicieron en un solo equipo de escritorio, con MongoDB y el cliente en la
+misma máquina y otros procesos activos; los tiempos de milisegundos son
+sensibles a ese ruido, por lo que se reporta la mediana de tres repeticiones
+y las conclusiones se apoyan sobre todo en métricas que no dependen de la
+máquina, como los documentos examinados y el plan elegido. Las consultas se
+midieron con la caché de WiredTiger ya caliente (la muestra de $\sim$1.1~GB
+cabe en memoria), así que los tiempos sin índice son los de un recorrido en
+memoria; con la caché fría, leyendo desde disco, serían mayores y la
+diferencia con la versión indexada crecería. Además, el espacio en disco
+medido con \texttt{storageSize} varió entre ejecuciones (la colección aparte
+ocupó entre 294 y 372~MB en distintas corridas) porque incluye espacio
+reservado por el motor; el tamaño lógico, en cambio, fue estable.
+\emph{Validez externa:} la muestra de 30{,}000 secuencias puede no reflejar
+el comportamiento sobre la base completa, en especial cuando los datos dejen
+de caber en memoria, y los resultados corresponden a una versión concreta de
+MongoDB (9.0) y a su configuración por defecto. \emph{Validez de
+constructo:} las tres consultas elegidas representan los patrones de acceso
+de este proyecto ---búsqueda puntual, búsqueda por especie y lectura combinada
+de metadatos y k-mers---; para otras cargas de trabajo, como agregaciones
+masivas sobre k-mers, la conclusión podría ser distinta, tal como sugiere la
+consulta de referencia sobre la suma global.
+
 \textbf{Si los datos crecieran 10 o 100 veces}, el diseño actual seguiría
 siendo válido en su estructura, pero dos decisiones deberían revisitarse: (1)
 el cálculo de k-mers en Python puro (sin paralelismo) tardó cerca de 30
 minutos para 240 mil secuencias; a 24 millones de secuencias ese tiempo sería
 inviable sin paralelizar el pipeline o delegar el cómputo a una extensión
-nativa; y (2) aunque el experimento de la sección de Resultados no encontró
-ventaja de la colección aparte para k-mers, a una escala donde la colección
+nativa; y (2) aunque en el experimento de la sección de Resultados la colección
+aparte solo mostró ventaja en espacio en disco y no en tiempo de consulta, a una escala donde la colección
 \texttt{sequences} no quepa cómodamente en el conjunto de trabajo en memoria
 de MongoDB, separar el campo más pesado (la secuencia) de los campos
 consultados con más frecuencia podría volver a ser ventajoso --- una pregunta
@@ -486,11 +660,14 @@ perfiles de k-mers de $k=1$ a $6$, resolviendo las quince consultas
 obligatorias y dos preguntas de investigación propias mediante agregaciones.
 La decisión de embeber los k-mers junto a su secuencia, en vez de separarlos
 en una colección aparte, se justificó no solo conceptualmente sino con una
-medida experimental propia: con el índice adecuado ambas estrategias rinden
-igual, y sin él la estrategia embebida es hasta 90 veces más lenta en
-búsquedas puntuales --- evidencia directa de que el índice sobre
-\texttt{original\_id}, y no la separación en colecciones, es lo que realmente
-sostiene el rendimiento de este modelo. La exploración sistemática de ambas
+medida experimental propia: con el índice adecuado, el modelo embebido
+resolvió las consultas puntuales en menos de un milisegundo con una sola
+consulta, mientras que la colección aparte necesitó dos y solo ofreció a
+cambio un menor espacio en disco. Sin índice, ambas estrategias fueron entre
+40 y 60 veces más lentas en búsquedas puntuales --- evidencia directa de que
+los índices sobre \texttt{original\_id} y \texttt{species\_id}, y no la
+separación en colecciones, son lo que realmente sostiene el rendimiento de
+este modelo. La exploración sistemática de ambas
 fuentes de datos, antes de fijar el esquema, permitió documentar y resolver
 problemas de calidad reales (nombres inconsistentes, valores faltantes
 disfrazados de texto, nombres de clado usados como especie) que de otro modo
@@ -508,10 +685,14 @@ descargarlos y reconstruir la base desde cero de forma reproducible.
 
 \section*{Agradecimientos}
 
-A los autores de PanTEon Database por hacer públicos los datos que hicieron
-posible este trabajo.
+Este trabajo se realizó como proyecto del curso Bases de Datos II de la
+Universidad Autónoma de Manizales, bajo la orientación del docente Simón
+Gaviria Orrego. Agradecemos a los autores de PanTEon Database por hacer
+públicos los datos que hicieron posible este trabajo.
 
-\bibliographystyle{unsrtnat}
+\nolinenumbers
+
+% Bibliografía compilada con el estilo oficial "plos2025.bst" (Vancouver).
 \bibliography{references}
 
 \end{document}
