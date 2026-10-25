@@ -1,181 +1,86 @@
-\documentclass[10pt,letterpaper]{article}
-\usepackage[top=0.85in,left=2.75in,footskip=0.75in]{geometry}
+%Version 3.1 December 2024
+% Plantilla oficial Springer Nature (sn-jnl), usada por BMC Bioinformatics.
+% Opciones: Vancouver numerado (estilo de citas de BMC), doble espacio
+% (referee) y números de línea (lineno), como pide la guía de BMC.
+\documentclass[pdflatex,sn-vancouver-num,lineno,referee]{sn-jnl}
 
-% amsmath and amssymb packages, useful for mathematical formulas and symbols
-\usepackage{amsmath,amssymb}
+%%%% Standard Packages
+\usepackage{graphicx}%
+\usepackage{multirow}%
+\usepackage{amsmath,amssymb,amsfonts}%
+\usepackage{amsthm}%
+\usepackage{mathrsfs}%
+\usepackage[title]{appendix}%
+\usepackage{xcolor}%
+\usepackage{textcomp}%
+\usepackage{manyfoot}%
+\usepackage{booktabs}%
+\usepackage{algorithm}%
+\usepackage{algorithmicx}%
+\usepackage{algpseudocode}%
+\usepackage{listings}%
+%%%%
 
-% Use adjustwidth environment to exceed column width (see example table in text)
-\usepackage{changepage}
+\raggedbottom
+% Los artículos de BMC usan encabezados sin numerar
+\unnumbered
 
-% textcomp package and marvosym package for additional characters
-\usepackage{textcomp,marvosym}
-
-% cite package, to clean up citations in the main text. Do not remove.
-\usepackage{cite}
-
-% Use nameref to cite supporting information files (see Supporting Information section for more info)
-\usepackage{nameref,hyperref}
-
-% line numbers
-\usepackage[right]{lineno}
-
-% ligatures disabled
-\usepackage[nopatch=eqnum]{microtype}
-% \DisableLigatures solo existe en pdfLaTeX; se omite al compilar con XeTeX (tectonic).
-\usepackage{iftex}
-\ifPDFTeX
-\DisableLigatures[f]{encoding = *, family = * }
-\fi
-
-% color can be used to apply background shading to table cells only
-\usepackage[table]{xcolor}
-
-% array package and thick rules for tables
-\usepackage{array}
-
-% create "+" rule type for thick vertical lines
-\newcolumntype{+}{!{\vrule width 2pt}}
-
-% create \thickcline for thick horizontal lines of variable length
-\newlength\savedwidth
-\newcommand\thickcline[1]{%
-  \noalign{\global\savedwidth\arrayrulewidth\global\arrayrulewidth 2pt}%
-  \cline{#1}%
-  \noalign{\vskip\arrayrulewidth}%
-  \noalign{\global\arrayrulewidth\savedwidth}%
-}
-
-% \thickhline command for thick horizontal lines that span the table
-\newcommand\thickhline{\noalign{\global\savedwidth\arrayrulewidth\global\arrayrulewidth 2pt}%
-\hline
-\noalign{\global\arrayrulewidth\savedwidth}}
-
-
-% Remove comment for double spacing
-%\usepackage{setspace} 
-%\doublespacing
-
-% Text layout
-\raggedright
-\setlength{\parindent}{0.5cm}
-\textwidth 5.25in
-\textheight 8.75in
-
-% Bold the 'Figure #' in the caption and separate it from the title/caption with a period
-% Captions will be left justified
-\usepackage[aboveskip=1pt,labelfont=bf,labelsep=period,justification=raggedright,singlelinecheck=off]{caption}
-\renewcommand{\figurename}{Fig}
-
-% Please use the included `plos2025.bst` as your BibTeX style
-\bibliographystyle{plos2025}
-
-% Remove brackets from numbering in List of References
-\makeatletter
-\renewcommand{\@biblabel}[1]{\quad#1.}
-\makeatother
-
-
-
-% Header and Footer with logo
-\usepackage{lastpage,fancyhdr,graphicx}
-\usepackage{epstopdf}
-%\pagestyle{myheadings}
-\pagestyle{fancy}
-\fancyhf{}
-%\setlength{\headheight}{27.023pt}
-%\lhead{\includegraphics[width=2.0in]{PLOS-submission.eps}}
-\rfoot{\thepage/\pageref{LastPage}}
-\renewcommand{\headrulewidth}{0pt}
-\renewcommand{\footrule}{\hrule height 2pt \vspace{2mm}}
-\fancyheadoffset[L]{2.25in}
-\fancyfootoffset[L]{2.25in}
-\lfoot{\today}
-
-%% Include all user-defined macros below
-
-% El artículo está en español (permitido por el enunciado del taller); PLOS
-% exige "Fig" para las figuras, y las tablas se nombran "Tabla" para que
-% coincidan con las referencias del texto.
-\renewcommand{\tablename}{Tabla}
-
-%% END MACROS SECTION
-
+% El artículo está en español (permitido por el enunciado del taller)
+\renewcommand\tablename{Tabla}%
+\renewcommand\abstractname{Resumen}%
+\renewcommand\refname{Referencias}%
 
 \begin{document}
-\vspace*{0.2in}
 
-% Title must be 250 characters or less.
-\begin{flushleft}
-{\Large
-\textbf{Un modelo de datos documental en MongoDB para integrar secuencias, taxonomía y perfiles de k-mers de elementos transponibles a través de reinos}
-}
-\newline
-% Insert author names, affiliations and corresponding author email (do not include titles, positions, or degrees).
-\\
-Mateo Quintero Morales\textsuperscript{1\Yinyang*},
-Tomás Restrepo Chica\textsuperscript{1\Yinyang*},
-Juan David Gómez Tangarife\textsuperscript{1\Yinyang*}
-\\
-\bigskip
-\textbf{1} Programa de Ingeniería de Sistemas y Telecomunicaciones, Universidad Autónoma de Manizales, Manizales, Caldas, Colombia
-\\
-\bigskip
+\title[Modelo documental en MongoDB para elementos transponibles]{Un modelo de datos documental en MongoDB para integrar secuencias, taxonomía y perfiles de k-mers de elementos transponibles a través de reinos}
 
-% Primary Equal Contribution Note
-\Yinyang Estos autores contribuyeron por igual a este trabajo.
+\author*[1]{\fnm{Mateo} \sur{Quintero Morales}}\email{mateoq152006@gmail.com}
+\equalcont{Estos autores contribuyeron por igual a este trabajo.}
 
-% Use the asterisk to denote corresponding authorship and provide email address in note below.
-* mateoq152006@gmail.com, tomas.restrepoc@autonoma.edu.co, juand.gomezt@autonoma.edu.co
+\author*[1]{\fnm{Tomás} \sur{Restrepo Chica}}\email{tomas.restrepoc@autonoma.edu.co}
+\equalcont{Estos autores contribuyeron por igual a este trabajo.}
 
-\end{flushleft}
-% Please keep the abstract below 300 words
-\section*{Resumen}
-Los elementos transponibles (TEs) ocupan una fracción enorme de los genomas
-eucariotas e influyen en la evolución y la regulación génica, pero integrar sus
-secuencias, su taxonomía de origen y sus perfiles de composición es un reto de
-volumen y de diseño de datos. Presentamos un modelo de datos documental en
-MongoDB, implementado con un pipeline en Python, que integra 239{,}946
-secuencias de elementos transponibles de 2790 especies (reinos Animalia,
-Plantae y Fungi) de la base pública PanTEon, junto con sus perfiles de k-mers
-de longitud 1 a 6. El modelo usa dos colecciones --- \texttt{species} y
-\texttt{sequences} --- relacionadas por referencia, con los perfiles de k-mers
-embebidos como diccionarios dispersos de conteos dentro de cada secuencia. Se
-documentan los problemas de calidad de datos encontrados (nombres de especie
-inconsistentes, valores faltantes codificados como texto, nombres de clado
-usados como "especie"), se resuelven quince consultas y dos preguntas de
-investigación propias mediante agregaciones de MongoDB, y se evalúa
-experimentalmente el almacenamiento embebido frente a una colección aparte
-para los k-mers, midiendo tiempo de carga, espacio en disco y tiempo de
-consulta con y sin índice. Con índice, ambas estrategias resolvieron las
-consultas puntuales en menos de un milisegundo; sin índice, todas cayeron en
-un recorrido completo de la colección y fueron entre 40 y 60 veces más
-lentas. El almacenamiento embebido resultó operacionalmente más simple para el
-patrón de acceso del proyecto (una consulta en vez de dos), mientras que la
-colección aparte ocupó menos espacio en disco por una mejor compresión. El código, el modelo y los resultados completos están disponibles en
-un repositorio público.
+\author*[1]{\fnm{Juan David} \sur{Gómez Tangarife}}\email{juand.gomezt@autonoma.edu.co}
+\equalcont{Estos autores contribuyeron por igual a este trabajo.}
 
-% Please keep the Author Summary between 150 and 200 words. Use first person.
-\section*{Resumen para el lector no especializado}
-El ADN de casi todos los seres vivos contiene millones de fragmentos
-repetitivos llamados elementos transponibles, capaces de copiarse y moverse
-dentro del genoma. Entender cómo se distribuyen estos fragmentos entre especies
-de animales, plantas y hongos ayuda a comprender la evolución de los genomas.
-En este trabajo organizamos cerca de 240 mil de estos fragmentos, junto con la
-información de a qué especie pertenecen y cuál es su "huella digital" química
-(la frecuencia con la que aparecen ciertas combinaciones cortas de letras del
-ADN), dentro de una base de datos no relacional (MongoDB), pensada para que
-investigadores puedan hacer preguntas complejas sobre estos datos de forma
-rápida. Documentamos los problemas reales que encontramos en los datos
-públicos que usamos, explicamos por qué organizamos la información de una
-manera y no de otra, y medimos con datos propios ---no solo intuición--- cuál
-estrategia de organización es más conveniente. Todo el código queda disponible
-para que cualquiera pueda repetir el trabajo.
+\affil*[1]{\orgdiv{Programa de Ingeniería de Sistemas y Telecomunicaciones}, \orgname{Universidad Autónoma de Manizales}, \orgaddress{\city{Manizales}, \state{Caldas}, \country{Colombia}}}
 
-\clearpage
-\newgeometry{top=0.85in,left=1in,right=1in,footskip=0.75in}
-\linenumbers
+\abstract{\textbf{Antecedentes:} Los elementos transponibles (TEs) ocupan una
+fracción enorme de los genomas eucariotas e influyen en su evolución y
+regulación. Las colecciones públicas de TEs, como PanTEon, se distribuyen
+como archivos planos (un FASTA con las secuencias y un CSV con la taxonomía de
+cada especie), lo que obliga a procesar los archivos completos para cruzar una
+secuencia con su especie o recuperar su perfil de k-mers. El objetivo de este
+trabajo fue diseñar, implementar y evaluar una base de datos documental que
+integre las secuencias, su clasificación, la taxonomía de su especie y sus
+perfiles de k-mers de longitud 1 a 6.
 
-\section*{Introducción}
+\textbf{Resultados:} Se construyó en MongoDB, con un pipeline reproducible en
+Python, un modelo de dos colecciones relacionadas por referencia
+(\texttt{species} y \texttt{sequences}) que almacena 239\,946 secuencias de
+2790 especies de los reinos Animalia, Plantae y Fungi, con los perfiles de
+k-mers embebidos como diccionarios dispersos de conteos. Se documentaron y
+resolvieron problemas de calidad de los datos (nombres de especie que no
+cruzaban entre archivos, valores faltantes escritos como texto y nombres de
+clado usados como especie), y se resolvieron quince consultas obligatorias y
+dos preguntas propias mediante agregaciones. En un experimento sobre 30\,000
+secuencias, con índice ambas estrategias de almacenamiento de k-mers
+(embebida y colección aparte) resolvieron las consultas puntuales en menos de
+un milisegundo; sin índice fueron entre 40 y 60 veces más lentas. La
+colección aparte ocupó menos espacio en disco (372 frente a 507~MB), pero
+necesitó dos consultas donde la embebida usó una.
+
+\textbf{Conclusiones:} Para un patrón de acceso en el que los k-mers se
+consultan junto con su secuencia, embeberlos es la opción más simple y
+rápida, y los índices pesan más en el rendimiento que la forma de almacenar
+los perfiles. El código, el modelo y los resultados están disponibles en un
+repositorio público y la base se puede reconstruir desde cero.}
+
+\keywords{Elementos transponibles, MongoDB, Bases de datos documentales, Perfiles de k-mers, Modelado de datos, PanTEon, Rendimiento de consultas}
+
+\maketitle
+
+\section{Antecedentes}\label{sec:antecedentes}
 
 Los elementos transponibles (\emph{transposable elements}, TEs) son secuencias
 de ADN capaces de moverse o copiarse dentro de un genoma. Lejos de ser "ADN
@@ -215,7 +120,7 @@ cómo se almacenan perfiles de k-mers dispersos de forma eficiente --- y
 respaldar esas decisiones con medidas propias de rendimiento y almacenamiento,
 no solo con intuición.
 
-\section*{Trabajo relacionado}
+\subsection{Trabajo relacionado}
 
 Las bases de datos de TEs de referencia difieren tanto en qué almacenan como
 en cómo lo organizan. \textbf{Repbase}~\cite{bao2015repbase} es una de las
@@ -245,12 +150,12 @@ presente trabajo parte de esa distribución y la convierte en una base de datos
 consultable, en la que los perfiles de k-mers ---la representación que usan
 los clasificadores--- quedan almacenados junto a cada secuencia.
 
-\section*{Materiales y métodos}
+\section{Métodos}\label{sec:metodos}
 
-\subsection*{Datos y problemas de calidad encontrados}
+\subsection{Datos y problemas de calidad encontrados}
 
 Se usaron las dos fuentes principales de PanTEon Database v1.6.1 (Zenodo,
-licencia CC~BY~4.0): un archivo FASTA con 239{,}946 secuencias de elementos
+licencia CC~BY~4.0): un archivo FASTA con 239\,946 secuencias de elementos
 transponibles (encabezado \texttt{>ID\#CLASE/ORDEN/SUPERFAMILIA\ @Especie}) y un
 archivo CSV con metadatos taxonómicos de 2790 especies (Kingdom, Phylum, Class,
 Order, Family, Species, Source, Source\,2, Notes). Antes de diseñar el modelo
@@ -264,7 +169,7 @@ documentar varios problemas de calidad reales:
   mayúsculas al leer.
   \item \textbf{Alfabeto de nucleótidos.} Una vez normalizado el caso, el
   alfabeto observado es estrictamente $\{A,C,G,T,N\}$, sin otros códigos IUPAC
-  de ambigüedad. Aproximadamente 35\% de las secuencias (muestra de 20{,}000)
+  de ambigüedad. Aproximadamente 35\% de las secuencias (muestra de 20\,000)
   contienen al menos una N, en promedio $\sim$1.1\% de su longitud en las que
   la tienen, con un caso extremo cercano al 50\%.
   \item \textbf{Valores faltantes codificados como texto.} La columna
@@ -286,12 +191,12 @@ documentar varios problemas de calidad reales:
   2790 especies cruzan exactamente, sin huérfanas en ningún lado.
 \end{itemize}
 
-\subsection*{Modelo de datos}
+\subsection{Modelo de datos}
 
-El modelo (Fig~\ref{fig:modelo}) usa dos colecciones principales. \textbf{\texttt{species}}
+El modelo (Fig.~\ref{fig:modelo}) usa dos colecciones principales. \textbf{\texttt{species}}
 (2790 documentos) almacena la taxonomía completa de cada especie y la
 procedencia de su biblioteca de TEs (\texttt{source}, \texttt{source2},
-\texttt{notes}). \textbf{\texttt{sequences}} (239{,}946 documentos) almacena,
+\texttt{notes}). \textbf{\texttt{sequences}} (239\,946 documentos) almacena,
 por cada elemento transponible: su identificador original (\texttt{original\_id}),
 su clasificación de TE (\texttt{te\_class}, \texttt{te\_order},
 \texttt{te\_superfamily}), una referencia a su especie (\texttt{species\_id})
@@ -315,7 +220,7 @@ Dos decisiones de diseño merecen justificación explícita:
 \textbf{Referencia, no embebido, entre secuencia y especie.} Se consideró
 embeber la taxonomía completa en cada secuencia, pero se descartó: la
 taxonomía se repetiría en promedio 86 veces por especie
-($239{,}946/2790$), y una especie con la corrección de un dato taxonómico
+($239\,946/2790$), y una especie con la corrección de un dato taxonómico
 obligaría a actualizar todas sus secuencias. Se referencia por
 \texttt{species\_id}, con \texttt{species\_name} denormalizado como única
 excepción --- un campo pequeño y estable, necesario para mostrar resultados sin
@@ -340,23 +245,23 @@ esperado --- verificada insertando deliberadamente un documento inválido. Los
 Tabla~\ref{tab:indices}.
 
 \begin{table}[!ht]
-\centering
 \caption{\textbf{Índices del modelo de producción.}}
-\begin{tabular}{|p{3.6cm}|p{2.1cm}|p{7.8cm}|}
-\hline
-\textbf{Índice} & \textbf{Colección} & \textbf{Consulta que soporta} \\ \thickhline
+\begin{tabular*}{\textwidth}{@{\extracolsep\fill}p{3.4cm}p{2.0cm}p{6.2cm}@{}}
+\toprule
+Índice & Colección & Consulta que soporta \\
+\midrule
 \texttt{species\_name} (único) & species & Unicidad; cruce por nombre \\
 \texttt{match\_key} & species & Cruce FASTA$\leftrightarrow$CSV durante la carga \\
 \texttt{kingdom} & species & Agrupar/filtrar por reino \\
 \texttt{original\_id} (único) & sequences & Búsqueda por identificador; unicidad \\
 \texttt{species\_id} & sequences & \texttt{\$lookup} con species; conteos por especie \\
 (\texttt{te\_class}, \texttt{te\_order}, \texttt{te\_superfamily}) & sequences & Conteos por clasificación; filtros de biblioteca \\
-\hline
-\end{tabular}
+\botrule
+\end{tabular*}
 \label{tab:indices}
 \end{table}
 
-\subsection*{Pipeline en Python}
+\subsection{Pipeline en Python}
 
 El pipeline (Python 3.14, \texttt{pymongo}, \texttt{biopython}~\cite{cock2009biopython},
 \texttt{pandas}) procesa el FASTA en \emph{streaming} línea por línea (sin
@@ -366,18 +271,18 @@ columnas requeridas, normaliza nombres de especie, calcula los perfiles de
 k-mers de $k=1$ a $6$ y dos atributos adicionales por secuencia
 (\texttt{gc\_content}, \texttt{n\_percentage}), y carga los documentos en
 MongoDB con \texttt{bulk\_write} en lotes de 200. La carga completa de las
-239{,}946 secuencias tomó 1778.7~s ($\sim$29.6~min) en un equipo de escritorio
+239\,946 secuencias tomó 1778.7~s ($\sim$29.6~min) en un equipo de escritorio
 estándar, sin omitir ninguna secuencia tras la normalización del cruce
 FASTA$\leftrightarrow$CSV. El pipeline es reproducible: cualquier persona
 puede regenerar la base desde cero ejecutando tres scripts documentados en el
 repositorio sobre los dos archivos descargados de Zenodo.
 
-\subsection*{Diseño de los experimentos}\label{sec:experimentos}
+\subsection{Diseño de los experimentos}\label{sec:experimentos}
 
 Para evaluar la decisión de embeber los k-mers se comparó esa estrategia
 contra una \textbf{colección aparte} (metadatos de la secuencia en una
 colección, k-mers en otra, referenciados por \texttt{sequence\_id}), sobre una
-muestra de 30{,}000 secuencias \emph{ya cargadas} --- es decir, con los k-mers
+muestra de 30\,000 secuencias \emph{ya cargadas} --- es decir, con los k-mers
 ya calculados --- para aislar el costo de la estrategia de almacenamiento del
 costo de calcular los k-mers. La muestra es reproducible: los identificadores
 se eligen al azar con una semilla fija. Para cada estrategia se midió el
@@ -394,47 +299,57 @@ elegido, documentos y llaves examinados, tiempo en el servidor) y se midió
 además su tiempo desde el cliente; se reporta la mediana de tres
 repeticiones.
 
-\section*{Resultados}
+\subsection{Uso de herramientas de inteligencia artificial}
 
-\subsection*{Composición de la base}
+Siguiendo la política de BMC sobre modelos de lenguaje, se declara que el
+equipo usó un asistente de inteligencia artificial (Claude, de Anthropic)
+como apoyo en una parte pequeña del código y en la creación de las figuras.
+Todos los resultados reportados provienen de ejecutar ese código sobre la
+base de datos del proyecto; las cifras de las tablas y las figuras se
+verificaron contra las salidas de los notebooks del repositorio. Los autores
+revisaron el contenido y asumen la responsabilidad del trabajo.
 
-Tras la carga completa, \texttt{sequences} contiene 239{,}946 documentos y
+\section{Resultados}\label{sec:resultados}
+
+\subsection{Composición de la base}
+
+Tras la carga completa, \texttt{sequences} contiene 239\,946 documentos y
 \texttt{species} 2790, sin IDs duplicados ni referencias
 \texttt{species\_id} huérfanas (verificado con una agregación
 \texttt{\$group}/\texttt{\$count} y un \texttt{\$lookup} de control). La
 Tabla~\ref{tab:composicion} resume la composición por clase y orden de TE
-(consulta~1). CLASSI (retrotransposones) domina con 194{,}774 TEs (81.2\%)
-frente a 45{,}172 (18.8\%) de CLASSII (transposones de ADN); LTR es el orden
-más abundante (119{,}368), seguido de LINE (68{,}382).
+(consulta~1). CLASSI (retrotransposones) domina con 194\,774 TEs (81.2\%)
+frente a 45\,172 (18.8\%) de CLASSII (transposones de ADN); LTR es el orden
+más abundante (119\,368), seguido de LINE (68\,382).
 
 \begin{table}[!ht]
-\centering
 \caption{\textbf{Cantidad de TEs por clase y orden (consulta 1).}}
-\begin{tabular}{|l|r|r|}
-\hline
-\textbf{Clase} & \textbf{Orden} & \textbf{Cantidad} \\ \thickhline
-CLASSI  & LTR       & 119{,}368 \\
-CLASSI  & LINE      & 68{,}382 \\
-CLASSII & TIR       & 36{,}471 \\
-CLASSII & HELITRON  & 5{,}075 \\
-CLASSI  & MITE      & 3{,}456 \\
-CLASSI  & SINE      & 3{,}634 \\
-CLASSI  & DIRS      & 2{,}933 \\
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Clase & Orden & Cantidad \\
+\midrule
+CLASSI  & LTR       & 119\,368 \\
+CLASSI  & LINE      & 68\,382 \\
+CLASSII & TIR       & 36\,471 \\
+CLASSII & HELITRON  & 5\,075 \\
+CLASSI  & MITE      & 3\,456 \\
+CLASSI  & SINE      & 3\,634 \\
+CLASSI  & DIRS      & 2\,933 \\
 CLASSI  & PLE       & 344 \\
 CLASSII & CRYPTON   & 112 \\
 CLASSII & RETROPOSON& 113 \\
 CLASSII & MAVERICK  & 58 \\
-\hline
-\textbf{Total CLASSI}  & & \textbf{194{,}774} \\
-\textbf{Total CLASSII} & & \textbf{45{,}172} \\
-\hline
+\midrule
+\textbf{Total CLASSI}  & & \textbf{194\,774} \\
+Total CLASSII & & \textbf{45\,172} \\
+\botrule
 \end{tabular}
 \label{tab:composicion}
 \end{table}
 
-Entre reinos (consulta~3), Animalia está dominado por LINE (44{,}477 TEs)
-sobre LTR (25{,}382), mientras que Plantae y Fungi están dominados por LTR ---
-visible de un vistazo en la Fig~\ref{fig:comp-reino}, que agrega los 11
+Entre reinos (consulta~3), Animalia está dominado por LINE (44\,477 TEs)
+sobre LTR (25\,382), mientras que Plantae y Fungi están dominados por LTR ---
+visible de un vistazo en la Fig.~\ref{fig:comp-reino}, que agrega los 11
 órdenes para los 3 reinos a partir de una agregación con \texttt{\$lookup}.
 Las 10 especies con más TEs están encabezadas por \emph{Malus domestica}
 (1627), \emph{Danio rerio} (1352) y \emph{Callithrix jacchus} (1294)
@@ -447,22 +362,22 @@ preliminar más que con genomas realmente pobres en TEs.
 \includegraphics[width=0.95\textwidth]{figures/fig1_composicion_por_reino.png}
 \caption{\textbf{Composición de elementos transponibles por orden y reino.}
 Cantidad absoluta de TEs de cada orden en Animalia, Plantae y Fungi, calculada
-con una agregación \texttt{\$lookup} + \texttt{\$group} sobre las 239{,}946
+con una agregación \texttt{\$lookup} + \texttt{\$group} sobre las 239\,946
 secuencias.}
 \label{fig:comp-reino}
 \end{figure}
 
-\subsection*{Longitud y contenido GC}
+\subsection{Longitud y contenido GC}
 
 CLASSI es, en promedio, más del doble de largo que CLASSII (4453.1~nt frente a
-2137.3~nt; consulta~5), con longitud mínima de 81~nt y máxima de 19{,}926~nt
-en toda la base. La Fig~\ref{fig:longitud} muestra la distribución completa
+2137.3~nt; consulta~5), con longitud mínima de 81~nt y máxima de 19\,926~nt
+en toda la base. La Fig.~\ref{fig:longitud} muestra la distribución completa
 por orden: MAVERICK y LTR tienen la mediana más alta y la mayor dispersión,
 mientras que SINE y MITE son consistentemente cortos. El contenido GC
 promedio (consulta~6) es más alto en Fungi (46.2\%) y más bajo en Plantae
-(41.2\%) (Fig~\ref{fig:gc}); entre órdenes, SINE y DIRS tienen el GC\% más
+(41.2\%) (Fig.~\ref{fig:gc}); entre órdenes, SINE y DIRS tienen el GC\% más
 alto ($\sim$53\%) y TIR/MAVERICK el más bajo ($\sim$40\%). El TE más largo de
-toda la base (19{,}926~nt, orden LTR/GYPSY) pertenece a \emph{Helianthus
+toda la base (19\,926~nt, orden LTR/GYPSY) pertenece a \emph{Helianthus
 annuus}; los más cortos (81--100~nt) aparecen en los tres reinos (consulta~7).
 
 \begin{figure}[!h]
@@ -481,13 +396,13 @@ P5--P95), sin necesidad de extraer los datos crudos.}
 \label{fig:gc}
 \end{figure}
 
-\subsection*{Origen de los datos y control de calidad}
+\subsection{Origen de los datos y control de calidad}
 
 Agrupando por la columna \texttt{Source} del CSV (consulta~13), las
 bibliotecas generadas automáticamente con RepeatModeler2 + MCHelper
-(\texttt{RM2+MCH}) cubren 2404 especies con 208{,}354 secuencias (86.7
+(\texttt{RM2+MCH}) cubren 2404 especies con 208\,354 secuencias (86.7
 secuencias/especie en promedio, longitud media 4375.5~nt), mientras que las
-bibliotecas de referencia Dfam cubren 386 especies con 31{,}592 secuencias
+bibliotecas de referencia Dfam cubren 386 especies con 31\,592 secuencias
 (81.8 secuencias/especie, longitud media 1653.8~nt) --- una diferencia de
 longitud notable, consistente con que Dfam incluye más fragmentos de consenso
 cortos y las 45 bibliotecas de clado ancestral descritas en Métodos. Como
@@ -497,9 +412,9 @@ de regiones de ensamblaje genómico incompleto; estas secuencias se conservan
 en la base (no se descartan), y el pipeline simplemente excluye de los
 conteos cualquier k-mer que contenga una N.
 
-\subsection*{Patrones de k-mers}
+\subsection{Patrones de k-mers}
 
-La Fig~\ref{fig:heatmap} muestra la frecuencia relativa promedio de los 16
+La Fig.~\ref{fig:heatmap} muestra la frecuencia relativa promedio de los 16
 2-mers para cada orden de TE (consulta propia, visualización~4). Casi todos
 los órdenes comparten el mismo patrón dominante --- AA/TT/AT altos, CG
 consistentemente el más bajo, el conocido déficit de dinucleótidos CpG de los
@@ -522,9 +437,9 @@ un dinucleótido dividido entre el total de 2-mers de la secuencia.}
 \label{fig:heatmap}
 \end{figure}
 
-\subsection*{Evaluación experimental: embebido frente a colección aparte}\label{sec:resultados-exp}
+\subsection{Evaluación experimental: embebido frente a colección aparte}\label{sec:resultados-exp}
 
-Sobre la muestra de 30{,}000 secuencias (Tabla~\ref{tab:benchmark}), la carga
+Sobre la muestra de 30\,000 secuencias (Tabla~\ref{tab:benchmark}), la carga
 embebida tomó 9.7~s frente a 13.5~s de la colección aparte, que hace el doble
 de escrituras y mantiene un índice adicional. El tamaño lógico de los datos
 fue prácticamente el mismo en ambas estrategias (1128~MB frente a 1129~MB sin
@@ -537,8 +452,8 @@ almacenamiento. \textbf{Con índice}, las tres consultas usaron un plan
 \texttt{IXSCAN} y examinaron solo los documentos que devuelven; las
 consultas puntuales Q1 y Q3 tardaron menos de un milisegundo en ambas
 estrategias. \textbf{Sin índice}, todas cayeron en un \texttt{COLLSCAN} que
-examinó la colección completa (30{,}000 documentos en el modelo embebido y
-60{,}000 en la colección aparte, que recorre dos colecciones), y Q1 pasó de
+examinó la colección completa (30\,000 documentos en el modelo embebido y
+60\,000 en la colección aparte, que recorre dos colecciones), y Q1 pasó de
 0.33~ms a 19.2~ms en el modelo embebido ---unas 58 veces más lenta--- y de
 0.64~ms a 29.2~ms en la colección aparte. En Q2, el tiempo en el servidor
 pasó de 1~ms a 24--37~ms al quitar el índice; en el cliente la diferencia es
@@ -547,27 +462,27 @@ costo está en transferir y decodificar los 179 perfiles de 6-mers devueltos,
 no en encontrarlos.
 
 \begin{table}[!ht]
-\centering
-\caption{\textbf{Comparación embebido vs. colección aparte (muestra de 30{,}000 secuencias).}
+\caption{\textbf{Comparación embebido vs. colección aparte (muestra de 30\,000 secuencias).}
 Tiempos medidos desde el cliente (mediana de 3 repeticiones); entre
 paréntesis, documentos examinados según \texttt{explain("executionStats")}.}
-\begin{tabular}{|l|r|r|}
-\hline
-\textbf{Métrica} & \textbf{Embebido} & \textbf{Colección aparte} \\ \thickhline
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Métrica & Embebido & Colección aparte \\
+\midrule
 Tiempo de carga (s) & 9.67 & 13.50 \\
 Espacio en disco (MB) & 506.59 & 372.26 (43.90 + 328.37) \\
 Tamaño lógico sin comprimir (MB) & 1128.02 & 1129.43 \\
 Índices (MB) & 1.00 & 2.00 \\
-\hline
+\midrule
 Q1 perfil de una secuencia, con índice (ms) & 0.33 (1) & 0.64 (2) \\
-Q1 perfil de una secuencia, sin índice (ms) & 19.18 (30{,}000) & 29.23 (60{,}000) \\
+Q1 perfil de una secuencia, sin índice (ms) & 19.18 (30\,000) & 29.23 (60\,000) \\
 Q2 perfiles de una especie, con índice (ms) & 41.38 (179) & 48.14 (358) \\
-Q2 perfiles de una especie, sin índice (ms) & 66.58 (30{,}000) & 81.46 (60{,}000) \\
+Q2 perfiles de una especie, sin índice (ms) & 66.58 (30\,000) & 81.46 (60\,000) \\
 Q3 metadatos + perfil, con índice (ms) & 0.42 (1) & 0.74 (2) \\
-Q3 metadatos + perfil, sin índice (ms) & 18.97 (30{,}000) & 29.62 (60{,}000) \\
-\hline
-Suma global de un 6-mer, agregación (ms) & 337.31 (30{,}000) & 327.02 (30{,}000) \\
-\hline
+Q3 metadatos + perfil, sin índice (ms) & 18.97 (30\,000) & 29.62 (60\,000) \\
+\midrule
+Suma global de un 6-mer, agregación (ms) & 337.31 (30\,000) & 327.02 (30\,000) \\
+\botrule
 \end{tabular}
 \label{tab:benchmark}
 \end{table}
@@ -578,7 +493,7 @@ secuenciales donde el modelo embebido usó una, y fue algo más lenta tanto con
 ligeramente más rápida es la agregación global sobre un k-mer (327~ms frente
 a 337~ms), que lee todos los documentos y no se beneficia de ningún índice.
 
-\section*{Discusión}
+\section{Discusión}\label{sec:discusion}
 
 Los resultados respaldan la decisión de diseño de embeber los k-mers junto a
 su secuencia: dado que nunca se consultan de forma aislada ni se comparten
@@ -609,7 +524,7 @@ o \texttt{null}) --- fue un compromiso deliberado entre seguridad de datos y
 la naturaleza real, incompleta, de los metadatos taxonómicos disponibles.
 
 \textbf{Limitaciones.} El experimento de almacenamiento se corrió sobre una
-muestra de 30{,}000 secuencias (12.5\% de la base), no sobre las 239{,}946
+muestra de 30\,000 secuencias (12.5\% de la base), no sobre las 239\,946
 completas, por restricciones de tiempo. El umbral de 5\% de contenido N
 usado en el control de calidad es una elección heurística propia, no un
 estándar de la literatura. Finalmente, el cruce de especies se resolvió por
@@ -630,7 +545,7 @@ diferencia con la versión indexada crecería. Además, el espacio en disco
 medido con \texttt{storageSize} varió entre ejecuciones (la colección aparte
 ocupó entre 294 y 372~MB en distintas corridas) porque incluye espacio
 reservado por el motor; el tamaño lógico, en cambio, fue estable.
-\emph{Validez externa:} la muestra de 30{,}000 secuencias puede no reflejar
+\emph{Validez externa:} la muestra de 30\,000 secuencias puede no reflejar
 el comportamiento sobre la base completa, en especial cuando los datos dejen
 de caber en memoria, y los resultados corresponden a una versión concreta de
 MongoDB (9.0) y a su configuración por defecto. \emph{Validez de
@@ -652,10 +567,10 @@ de MongoDB, separar el campo más pesado (la secuencia) de los campos
 consultados con más frecuencia podría volver a ser ventajoso --- una pregunta
 que este experimento, a la escala actual, no puede responder por sí solo.
 
-\section*{Conclusiones}
+\section{Conclusiones}\label{sec:conclusiones}
 
 Se diseñó, implementó y evaluó un modelo de datos documental en MongoDB que
-integra 239{,}946 secuencias de elementos transponibles, su taxonomía y sus
+integra 239\,946 secuencias de elementos transponibles, su taxonomía y sus
 perfiles de k-mers de $k=1$ a $6$, resolviendo las quince consultas
 obligatorias y dos preguntas de investigación propias mediante agregaciones.
 La decisión de embeber los k-mers junto a su secuencia, en vez de separarlos
@@ -673,26 +588,74 @@ problemas de calidad reales (nombres inconsistentes, valores faltantes
 disfrazados de texto, nombres de clado usados como especie) que de otro modo
 habrían quedado embebidos silenciosamente en el modelo final.
 
-\section*{Disponibilidad de datos y código}
+\section*{Lista de abreviaturas}
 
-El código completo del pipeline, el modelo de datos, las consultas, los
-experimentos y las figuras está disponible en un repositorio público:
-\url{https://github.com/JuanGomez507/panteon-bd2-elementos-transponibles}. Los
-datos originales (FASTA y CSV) provienen de PanTEon Database
-v1.6.1~\cite{panteon2026zenodo}, disponible en Zenodo bajo licencia CC~BY~4.0;
-el repositorio del proyecto no redistribuye estos archivos --- documenta cómo
-descargarlos y reconstruir la base desde cero de forma reproducible.
+\noindent
+\begin{tabular}{@{}lp{0.78\linewidth}@{}}
+BSON & \emph{Binary JSON}, formato de documentos de MongoDB \\
+CSV & Valores separados por comas (\emph{comma-separated values}) \\
+DIRS & Retrotransposones de tipo \emph{Dictyostelium intermediate repeat sequence} \\
+GC & Contenido de guanina y citosina \\
+HMM & Modelo oculto de Markov (\emph{hidden Markov model}) \\
+LINE & Elemento nuclear largo intercalado (\emph{long interspersed nuclear element}) \\
+LTR & Repetición terminal larga (\emph{long terminal repeat}) \\
+MITE & Elemento transponible pequeño con repeticiones invertidas \\
+nt & Nucleótidos \\
+RM2+MCH & Bibliotecas generadas con RepeatModeler2 y MCHelper \\
+SINE & Elemento nuclear corto intercalado (\emph{short interspersed nuclear element}) \\
+TE & Elemento transponible (\emph{transposable element}) \\
+TIR & Repeticiones terminales invertidas (\emph{terminal inverted repeats}) \\
+\end{tabular}
 
-\section*{Agradecimientos}
+\backmatter
 
+\section*{Declaraciones}
+
+\bmhead{Aprobación ética y consentimiento para participar}
+No aplica.
+
+\bmhead{Consentimiento para publicación}
+No aplica.
+
+\bmhead{Disponibilidad de datos y materiales}
+Los datos analizados en este estudio están disponibles en el repositorio
+Zenodo de PanTEon Database v1.6.1~\cite{panteon2026zenodo}, bajo licencia
+CC~BY~4.0. El código del pipeline, las consultas, los experimentos y las
+figuras está disponible en el repositorio del proyecto~\cite{repo2026}, que
+documenta cómo descargar los datos y reconstruir la base desde cero; el
+repositorio no redistribuye los archivos de datos originales.
+\begin{itemize}
+\item Nombre del proyecto: PanTEon-Mongo
+\item Página del proyecto: \url{https://github.com/JuanGomez507/panteon-bd2-elementos-transponibles}
+\item Sistema operativo: independiente de la plataforma (probado en Windows 11)
+\item Lenguaje de programación: Python
+\item Otros requisitos: Python 3.11 o superior, MongoDB Community Server, pymongo, pandas, biopython, numpy, matplotlib, seaborn, jupyter
+\item Licencia: no especificada
+\item Restricciones de uso para no académicos: ninguna
+\end{itemize}
+
+\bmhead{Intereses en conflicto}
+Los autores declaran que no tienen intereses en conflicto.
+
+\bmhead{Financiación}
+No aplica.
+
+\bmhead{Contribuciones de los autores}
+TRC analizó las fuentes FASTA y CSV, realizó la limpieza de los datos y el
+informe de calidad, y diseñó el modelo documental de MongoDB, sus índices y
+validaciones. JDGT implementó el pipeline en Python, el cálculo de los
+perfiles de k-mers y la carga en MongoDB, desarrolló las consultas y generó
+las bibliotecas FASTA. MQM diseñó y ejecutó la evaluación experimental de las
+estrategias de almacenamiento, construyó las visualizaciones y coordinó la
+redacción del artículo. Todos los autores leyeron y aprobaron el manuscrito
+final.
+
+\bmhead{Agradecimientos}
 Este trabajo se realizó como proyecto del curso Bases de Datos II de la
 Universidad Autónoma de Manizales, bajo la orientación del docente Simón
 Gaviria Orrego. Agradecemos a los autores de PanTEon Database por hacer
 públicos los datos que hicieron posible este trabajo.
 
-\nolinenumbers
-
-% Bibliografía compilada con el estilo oficial "plos2025.bst" (Vancouver).
 \bibliography{references}
 
 \end{document}

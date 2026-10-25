@@ -1,23 +1,8 @@
-%% The plos2025.bst file is intended for use in PLOS submissions.
-%% It is a copy of the Vancouver BibTeX style (https://ctan.org/pkg/vancouver)
-%% with "eprints", "doi", and "hyperref" enabled (see init.config.constants below).
 %%
+%% This is file `sn-vancouver-num.bst',
+%% generated with the docstrip utility.
 %%
-%% This `vancouver.bst' bibliographic style file (for LaTeX/BibTeX) is
-%% generated with the docstrip utility and modified manually to meet the
-%% ``Uniform Requirements for Manuscripts Submitted to Biomedical Journals''
-%% as published in N Engl J Med 1997;336:309-315.
-%% (also known as the Vancouver style)
-%% The standards are summarized in:
-%% https://www.nlm.nih.gov/bsd/uniform_requirements.html
-%% and detailed in:
-%% https://www.ncbi.nlm.nih.gov/books/NBK7256/
-%%
-%%-------------------------------------------------------------------
-%%
-%% Author: Folkert van der Beek <folkertvanderbeek@gmail.com>
-%% Version: 1.0
-%% URL: https://gitlab.com/fvdbeek/vancouver.bst
+%% The original source files were: vancouver.bst 
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3
@@ -26,8 +11,6 @@
 %%   http://www.latex-project.org/lppl.txt
 %% and version 1.3 or later is part of all distributions of LaTeX
 %% version 2005/12/01 or later.
-%%
-%%-------------------------------------------------------------------
 %%
 %% This bibliography style file is intended for texts in ENGLISH
 %% This is a numerical citation style, and as such is standard LaTeX.
@@ -46,8 +29,14 @@
 %% \makeatletter % Reference list option change
 %% \renewcommand\@biblabel[1]{#1} % from [1] to 1
 %% \makeatother %
-%%
 %%---------------------------------------------------------------------
+
+FUNCTION {identify.vancouver.version}
+{ % Put identifying string in the .blg file
+  "sn-vancouver-num.bst"
+  " [2024/07/19 v1.1 Vancouver bibliography style]"
+  * top$
+}
 
 %% List of all possible fields
 ENTRY
@@ -65,6 +54,7 @@ ENTRY
     inventor     % for patents
     journal
     key
+    keywords
     month
     note
     number
@@ -84,6 +74,13 @@ ENTRY
     url % urlbst
     lastchecked % urlbst
     updated % urlbst
+    archive
+    archivePrefix
+    primaryClass
+    eid
+    adsurl
+    adsnote
+    version
   }
   {}
   { label }
@@ -98,12 +95,12 @@ FUNCTION {init.config.constants}
   "http://arxiv.org/abs/" 'eprinturl := % prefix to make URL from eprint ref
   "arXiv:" 'eprintprefix := % text prefix printed before eprint ref
   "http://dx.doi.org/" 'doiurl := % prefix to make URL from DOI
-  "doi:" 'doiprefix := % text prefix printed before DOI ref
-  #1 'addeprints := % 0=no eprints; 1=include eprints
-  #1 'adddoiresolver := % 0=no DOI resolver; 1=include it
-  #2 'hrefform := % 0=no crossrefs; 1=hypertex xrefs; 2=hyperref refs
+  "" 'doiprefix := % text prefix printed before DOI ref
+  #0 'addeprints := % 0=no eprints; 1=include eprints
+  #0 'adddoiresolver := % 0=no DOI resolver; 1=include it
+  #0 'hrefform := % 0=no crossrefs; 1=hypertex xrefs; 2=hyperref refs
 }
-INTEGERS {
+INTEGERS { 
   bracket.state
   outside.brackets
   open.brackets
@@ -174,14 +171,14 @@ FUNCTION {output.nonnull}
       bracket.state open.brackets =
         { " [" * }
         { ", " * } % bracket.state will be within.brackets
-      if$
-      s *
+      if$ 
+      s * 
       close.brackets 'bracket.state :=
     }
   if$
 }
 
-% Call this function just before adding something which should be presented in
+% Call this function just before adding something which should be presented in 
 % brackets.  bracket.state is handled specially within output.nonnull.
 FUNCTION {inbrackets}
 { bracket.state close.brackets =
@@ -218,7 +215,7 @@ FUNCTION {output.check}
 }
 
 FUNCTION {fin.entry}
-{
+{ 
   bracket.state close.brackets = % urlbst
     { "]" * }
     'skip$
@@ -260,11 +257,15 @@ FUNCTION {add.semicolon}
   no.blank.or.punct
 }
 
-FUNCTION {add.colon}
+FUNCTION {misc.add.colon}
 {
-  ":" *
-  no.blank.or.punct
-}
+   ": "  * 
+ }
+
+FUNCTION {misc.add.comma}
+{
+   ", "  * 
+ }
 
 FUNCTION {date.block}
 {
@@ -438,7 +439,7 @@ FUNCTION {remove.dots}
       * % concatenates the last 2 literals, i.e. every character, even a dot, following a "\" will be printed
     }
     { duplicate$ "." = % pushes 1 if the last character is ".", otherwise 0
-      'pop$ %  pushes the pop$ function
+      'pop$ %  pushes the pop$ function 
       { * } % concatenates the last 2 literals
     if$ % pops the last character if it is a dot, otherwise concatenates it with the string on top of the stack
     }
@@ -460,7 +461,7 @@ FUNCTION{string.length}
 STRINGS {replace find text}
 INTEGERS {find_length}
 FUNCTION {find.replace}
-{
+{ 
   'replace :=
   'find :=
   'text :=
@@ -821,7 +822,7 @@ FUNCTION {format.names.ed}
 }
 
 FUNCTION {format.authors}
-{
+{ 
   author "author" format.names
   %%"." " " "author" find.replace format.names
 }
@@ -921,26 +922,77 @@ FUNCTION {format.type}
   if$
 }
 
+FUNCTION {cite.author.editor}
+{ 's :=
+  s #1 "{vv~}{ll}" format.name$
+  s num.names$ duplicate$
+  #2 >
+    { pop$ " et~al." * }
+    { #2 =
+        {	s #2 "{vv~}{ll}{ jj}{ f}" format.name$ "others" =
+            { " et~al."  * }
+            { " and " * s #2 "{vv~}{ll}" format.name$ * }
+           if$
+         }
+         'skip$
+        if$
+    }
+  if$
+}
+
+FUNCTION {check.auth.edit.org}
+{author empty$
+  {
+    editor empty$
+      {
+        organization empty$
+          {""}
+          {organization}
+        if$		
+      }
+      {editor cite.author.editor}
+    if$		
+  }
+  {author cite.author.editor}
+ if$	
+}
+
+FUNCTION {check.year}
+{	year empty$
+    {""}
+    {year}
+  if$	
+}
+
 FUNCTION {output.bibitem}
 { outside.brackets 'bracket.state := % urlbst
    newline$
-  "\bibitem{" write$
-  cite$ write$
+  "\bibitem[\protect\citeauthoryear{" write$
+check.auth.edit.org write$
+"}{" write$ check.year write$ "}]{" write$ cite$ write$
   "}" write$
   newline$
   ""
   before.all 'output.state :=
 }
 
-FUNCTION {hyphenate}
-{ 't :=
+FUNCTION {n.dashify}
+{
+  't :=
   ""
     { t empty$ not }
     { t #1 #1 substring$ "-" =
-        { "-" *
-            { t #1 #1 substring$ "-" = }
-            { t #2 global.max$ substring$ 't := }
-          while$
+        { t #1 #2 substring$ "--" = not
+            { "--" *
+              t #2 global.max$ substring$ 't :=
+            }
+            {   { t #1 #1 substring$ "-" = }
+                { "-" *
+                  t #2 global.max$ substring$ 't :=
+                }
+              while$
+            }
+          if$
         }
         { t #1 #1 substring$ *
           t #2 global.max$ substring$ 't :=
@@ -987,7 +1039,7 @@ FUNCTION {format.journal.date}
 FUNCTION {format.date}
 {
   no.blank.or.punct
-  ";"
+  ";" 
   duplicate$ empty$
   year  "year"  bibinfo.check duplicate$ empty$
     { swap$ 'skip$
@@ -1145,136 +1197,12 @@ FUNCTION {multi.page.check}
   multiresult
 }
 
-FUNCTION {is.letter}
-{ duplicate$ empty$
-    { pop$ #0 }
-    { chr.to.int$
-      duplicate$ "A" chr.to.int$ <
-        { pop$ #0 }
-        { duplicate$ "Z" chr.to.int$ >
-            { duplicate$ "a" chr.to.int$ <
-                { pop$ #0 }
-                { duplicate$ "z" chr.to.int$ >
-                    { pop$ #0 }
-                    { pop$ #1 }
-                  if$
-                }
-              if$
-            }
-            { pop$ #1 }
-          if$
-        }
-      if$
-    }
-  if$
-}
-
-FUNCTION {is.digit}
-{ duplicate$ empty$
-    { pop$ #0 }
-    { chr.to.int$
-      duplicate$ "0" chr.to.int$ <
-        { pop$ #0 }
-        { "9" chr.to.int$ >
-            { #0 }
-            { #1 }
-          if$
-        }
-      if$
-    }
-  if$
-}
-
-FUNCTION {is.letter.digit}
-{ duplicate$ is.letter
-  swap$ is.digit or
-}
-
-INTEGERS { charptr len }
-
-STRINGS { start.number end.number range.separator }
-
-FUNCTION {abbreviate.range.numbers}
-{ end.number end.number text.length$ #1 substring$ is.letter
-    { start.number range.separator * end.number * }
-    { end.number text.length$ 'len :=
-      start.number text.length$ len <
-        'skip$
-        { start.number text.length$ len - #1 + 'charptr :=
-            { end.number text.length$ #1 >
-              start.number charptr #1 substring$
-              end.number #1 #1 substring$ = and
-            }
-            { charptr #1 + 'charptr :=
-              end.number #2 global.max$ substring$ 'end.number :=
-            }
-          while$
-        }
-      if$
-      start.number range.separator * end.number *
-    }
-  if$
-}
-
-% This a helper function for use in format.page.numbers
-FUNCTION {append.pages.part}
-{ duplicate$ duplicate$ text.length$ #1 substring$ "," =
-    { " " * }
-    'skip$
-  if$
-  end.number empty$
-    { start.number empty$
-        'skip$
-        { start.number * }
-      if$
-    }
-    { abbreviate.range.numbers * }
-  if$
-  "" 'start.number :=
-  "" 'end.number :=
-  "" 'range.separator :=
-}
-
-FUNCTION {format.page.numbers}
-{ 's :=
-  "" 't :=
-  "" 'start.number :=
-  "" 'end.number :=
-  "" 'range.separator :=
-  ""
-    { s empty$ not }
-    { s #1 #1 substring$ 't :=
-      t is.letter.digit
-        { range.separator empty$
-            { start.number t * 'start.number := }
-            { end.number t * 'end.number := }
-          if$
-        }
-        { s #1 #2 substring$ "--" =
-            { "--" 'range.separator := }
-            { t "-" =
-                { "-" 'range.separator := }
-                { append.pages.part
-                  t *
-                }
-              if$
-            }
-          if$
-        }
-      if$
-      s #2 global.max$ substring$ 's :=
-    }
-  while$
-  append.pages.part
-}
-
 FUNCTION {format.pages}
 { pages duplicate$ empty$ 'skip$
     { duplicate$ multi.page.check
         {
-          format.page.numbers
           bbl.pages swap$
-          hyphenate
+          n.dashify
         }
         {
           bbl.page swap$
@@ -1288,16 +1216,18 @@ FUNCTION {format.pages}
 }
 
 FUNCTION {format.journal.pages}
-{ pages empty$ 'skip$
-  { add.colon }
-  if$
-  pages duplicate$ empty$ 'pop$
-  {
-    format.page.numbers
-    hyphenate
-    "pages" bibinfo.check
-    *
-  }
+{ pages duplicate$ empty$ 'pop$
+    { swap$ duplicate$ empty$
+        { pop$ pop$ format.pages }
+        {
+          ":" *
+          swap$
+          n.dashify
+          "pages" bibinfo.check
+          *
+        }
+      if$
+    }
   if$
 }
 
@@ -1321,11 +1251,7 @@ FUNCTION {format.vol.num}
 }
 
 FUNCTION {format.vol.num.pages}
-{ volume empty$ number empty$ and
-    'skip$
-    { add.semicolon }
-  if$
-  volume field.or.null
+{ volume field.or.null
   duplicate$ empty$ 'skip$
     {
       "volume" bibinfo.check
@@ -1411,7 +1337,7 @@ FUNCTION {format.chapter.pages}
 	    'skip$
 	  if$
 	}
-	FUNCTION {format.thesis.type}
+FUNCTION {format.thesis.type}
 	{ type duplicate$ empty$
 	    'pop$
 	    { swap$ pop$
@@ -1465,10 +1391,6 @@ FUNCTION {format.institution.address}
 { institution "institution" bibinfo.check format.org.or.pub
 }
 
-FUNCTION {format.school.address}
-{ school "school" bibinfo.check format.org.or.pub
-}
-
 
 % urlbst...
 % Functions for making hypertext links.
@@ -1481,14 +1403,14 @@ FUNCTION {make.href.null}
 }
 % make hypertex specials
 FUNCTION {make.href.hypertex}
-{
+{ 
   "\special {html:<a href=" quote$ *
   swap$ * quote$ * "> }" * swap$ *
   "\special {html:</a>}" *
 }
 % make hyperref specials
 FUNCTION {make.href.hyperref}
-{
+{ 
   "\href {" swap$ * "} {" * swap$ * "}" *
 }
 FUNCTION {make.href}
@@ -1528,6 +1450,15 @@ FUNCTION {format.doi}
   if$
 }
 
+FUNCTION {format.ddoi}
+{ doi "doi" bibinfo.check
+  duplicate$ empty$ 'skip$
+    {
+      "\doi{" swap$ * "}" *
+    }
+  if$
+}
+
 % Output a URL.  We can't use the more normal idiom (something like
 % `format.url output'), because the `inbrackets' within
 % format.lastchecked applies to everything between calls to `output',
@@ -1535,10 +1466,10 @@ FUNCTION {format.doi}
 % the URL and the lastchecked in brackets.
 FUNCTION {output.url}
 { url empty$
-    'skip$
-    { new.block
+    'skip$ 
+    { new.block 
       format.url output
-      format.lastchecked output
+      format.lastchecked output 
     }
   if$
 }
@@ -1648,14 +1579,17 @@ FUNCTION {misc}
 { output.bibitem
   format.authors "author" output.check
   format.editors "author and editor" output.check
-  format.title "title" output.check
+	  no.blank.or.punct
+  add.period$  misc.add.colon  
+format.title "title" output.check
   type missing$
     { skip$ }
     { format.type "type" output.check }
     %%{ inbrackets type output }
   if$
+  new.block
   format.publisher.address output
-  format.date "year" output.check
+%  format.date "year" output.check
   new.block
   format.note output
   new.block
@@ -1664,6 +1598,56 @@ FUNCTION {misc}
   output.web.refs  % urlbst
   fin.entry
   empty.misc.check
+}
+
+FUNCTION {format.archive}
+{
+  archivePrefix empty$
+      { "" }
+      { archivePrefix ":" *}
+  if$           
+}
+
+FUNCTION {format.primaryClass}
+{
+  primaryClass empty$
+      { "" }
+      { "{[" primaryClass * "]}" *}
+  if$           
+}
+
+FUNCTION {format.soft.eprint}
+{ eprint empty$
+     { ""}
+     { archive empty$
+          {"{\href{https://arxiv.org/abs/" eprint * "}" *
+             "{{" * format.archive * eprint * "}}}" *}
+          {"{\href{https://arxiv.org/abs/" eprint * "}" *
+             "{{" * format.archive * eprint * "}}}" *}
+       if$
+     }
+     if$
+}
+
+FUNCTION {format.softmisc.archive}
+{
+  archivePrefix empty$
+      { "" }
+      { "" }
+  if$           
+}
+
+FUNCTION {format.softmisc.eprint}
+{ eprint empty$
+     { ""}
+     { archive empty$
+          {"{\href{https://ascl.net/" format.softmisc.archive * eprint * "}" *
+             "{{" * format.archive * eprint * "}}}" *}
+          {"{\href{https://ascl.net/" format.softmisc.archive * eprint * "}" *
+             "{{" * format.archive * eprint * "}}}" *}
+       if$
+     }
+     if$
 }
 
 FUNCTION {article}
@@ -1695,11 +1679,45 @@ FUNCTION {article}
   "journal" bibinfo.check
   "journal" output.check
   format.journal.date "year" output.check
+  add.semicolon
   format.vol.num.pages output
   new.block
   format.note output
-  output.web.refs  % urlbst
+  format.ddoi output 
+  new.block
+  format.soft.eprint output
+  format.primaryClass output
   fin.entry
+}
+
+FUNCTION {softmisc}
+{ output.bibitem
+  format.authors "author" output.check
+  format.editors "author and editor" output.check
+	  no.blank.or.punct
+  add.period$  misc.add.colon  
+  format.title "title" output.check misc.add.comma 
+  no.blank.or.punct
+  version output
+  type missing$
+    { skip$ }
+    { format.type "type" output.check }
+    %%{ inbrackets type output }
+  if$
+  new.block
+  format.publisher.address output
+%  format.date "year" output.check
+  new.block
+  format.note output
+  new.block
+  howpublished new.block.checka
+  howpublished "howpublished" bibinfo.check output
+  format.date "year" output.check
+  output.web.refs  % urlbst
+  new.block
+  format.softmisc.eprint output
+  fin.entry
+  empty.misc.check
 }
 
 FUNCTION {book}
@@ -1709,7 +1727,7 @@ FUNCTION {book}
         { format.organizations "organization" output.check }
         { format.editors "author and editor" output.check }
       if$
-    }
+    } 
     { format.authors output.nonnull
       "author and editor" editor either.or.check
     }
@@ -1841,7 +1859,8 @@ FUNCTION {phdthesis}
   "title" output.check
   format.type "type" output.check
   new.block
-  format.school.address output
+  school "school" bibinfo.warn output
+  address "address" bibinfo.check output
   format.date "year" output.check
   new.block
   format.note output
@@ -1955,6 +1974,8 @@ FUNCTION {unpublished}
 
 FUNCTION {default.type} { misc }
 READ
+EXECUTE {identify.vancouver.version}
+
 STRINGS { longest.label }
 INTEGERS { number.label longest.label.width }
 FUNCTION {initialize.longest.label}
@@ -1981,6 +2002,9 @@ FUNCTION {begin.bib}
   if$
   "\begin{thebibliography}{"  longest.label  * "}" *
   write$ newline$
+  "\providecommand{\doi}[1]{\url{https://doi.org/#1}}"
+  write$ newline$
+  "\bibcommenthead" write$ newline$
 }
 EXECUTE {begin.bib}
 EXECUTE {init.config.constants}
@@ -1993,4 +2017,5 @@ FUNCTION {end.bib}
 EXECUTE {end.bib}
 %% End of customized bst file
 %%
-%% End of file `plos2025.bst'.
+%% End of file `sn-vancouver-num.bst'.
+
