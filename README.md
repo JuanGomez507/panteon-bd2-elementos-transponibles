@@ -1,13 +1,21 @@
 # PanTEon-Mongo: Elementos Transponibles en MongoDB
 
-Proyecto del segundo corte — Bases de Datos II (Universidad Autónoma de Manizales).
-Diseño, implementación, población, consulta y evaluación de una base de datos en MongoDB
-que integra secuencias de elementos transponibles (TEs), su taxonomía y sus perfiles de k-mers,
-a partir de la base pública **PanTEon Database**.
+Proyecto del segundo corte — Bases de Datos II
+(Universidad Autónoma de Manizales).
 
-## Estructura del repositorio
+Diseño, implementación, población, consulta y evaluación
+de una base de datos documental construida en MongoDB
+que integra secuencias de elementos transponibles (TEs),
+su taxonomía completa y sus perfiles de k-mers (k=1 a 6),
+a partir de la base de datos pública PanTEon Database.
 
-```
+---
+
+## Estructura detallada del repositorio
+
+A continuación se describe la organización de carpetas
+y archivos principales dentro del proyecto:
+
 .
 ├── data/
 │   ├── libraries/        # Bibliotecas .fasta generadas por consulta (especie / reino)
@@ -17,88 +25,128 @@ a partir de la base pública **PanTEon Database**.
 ├── notebooks/            # Notebooks del pipeline y de consultas
 ├── scripts/              # Scripts reutilizables (carga, k-mers, utilidades)
 ├── JOURNAL.md             # Revista elegida y normas aplicadas
-├── requirements.txt
-└── README.md
-```
+├── requirements.txt      # Librerías de Python requeridas
+└── README.md             # Guía principal del proyecto
 
-## Datos
+---
 
-Este repositorio **no** incluye los archivos de datos crudos (son demasiado grandes para git).
-Descárgalos de Zenodo y colócalos en la raíz del proyecto:
+## Datos crudos y fuentes externas
 
-- Repositorio: https://zenodo.org/records/19372616
-- `PanTEon_Database_v1.6.1.fasta` (~990 MB)
-- `PanTEon_Database_metadata_v1.6.1.csv` (~370 kB)
+Este repositorio no incluye los archivos de datos crudos
+debido a que su peso excede los límites recomendados en Git.
 
-## Instalación y ejecución desde cero
+Para replicar la base localmente, descarga los datos de Zenodo
+y ubícalos directamente en la raíz del proyecto:
 
-### Requisitos
-- Python 3.11+ (probado con 3.14)
-- MongoDB Community Server corriendo localmente (`localhost:27017`)
+- Repositorio original de Zenodo:
+  https://zenodo.org/records/19372616
 
-### 1. Clonar y crear el entorno
+- Archivo FASTA con las secuencias:
+  PanTEon_Database_v1.6.1.fasta (~990 MB)
 
-```bash
+- Archivo CSV con los metadatos taxonómicos:
+  PanTEon_Database_metadata_v1.6.1.csv (~370 kB)
+
+---
+
+## Instalación y ejecución paso a paso
+
+### Requisitos previos del sistema
+
+- Intérprete de Python 3.11+ (probado con Python 3.14).
+- Servidor de MongoDB Community Server corriendo en local.
+- Dirección por defecto: localhost:27017
+
+---
+
+### Step 1: Clonar el repositorio y preparar entorno virtual
+
+Abre tu terminal de comandos e ingresa los siguientes pasos:
+
 git clone <url-del-repo>
-cd ProyectoCorte2
+cd panteon-bd2-elementos-transponibles
 python -m venv .venv
-.venv/Scripts/activate        # Windows
+.venv/Scripts/activate        # Comando para Windows (PowerShell / CMD)
 pip install -r requirements.txt
-```
 
-### 2. Descargar los datos
+---
 
-Descargar los dos archivos de Zenodo (ver sección Datos) y colocarlos en la raíz del proyecto.
+### Step 2: Descargar y posicionar los archivos de entrada
 
-### 3. Crear el esquema y cargar la base completa
+Descargar los dos archivos desde el enlace de Zenodo
+y colocarlos en la carpeta raíz del proyecto:
 
-```bash
-python scripts/setup_db.py       # colecciones, $jsonSchema, índices
-python scripts/load_species.py   # carga las 2790 especies del CSV
-python scripts/load_sequences.py # carga las 239,946 secuencias (~30 min, calcula k-mers k=1-6)
-```
+1. PanTEon_Database_v1.6.1.fasta
+2. PanTEon_Database_metadata_v1.6.1.csv
 
-`load_sequences.py` acepta `--limit N` para probar primero con una muestra pequeña
-antes de lanzar la carga completa (recomendado).
+---
 
-`notebooks/01_pipeline_extraccion.ipynb` documenta el mismo pipeline paso a paso,
-pero lo demuestra sobre una muestra pequeña (300 secuencias) por el costo de tiempo
-de la carga completa — es material explicativo, no el método de carga de producción.
+### Step 3: Inicializar esquemas y ejecutar la carga masiva
 
-### 4. Ejecutar consultas, generar bibliotecas y figuras
+Para construir las colecciones en MongoDB, aplicar la validación
+de esquemas mediante $jsonSchema e indexar los campos clave,
+ejecuta los scripts en el siguiente orden:
 
-```bash
+python scripts/setup_db.py       # Crea colecciones, reglas $jsonSchema e índices
+python scripts/load_species.py   # Procesa y carga las 2790 especies del CSV
+python scripts/load_sequences.py # Carga las 239,946 secuencias y calcula k-mers (k=1-6)
+
+**Nota de optimización:**
+El script load_sequences.py acepta el argumento --limit N
+para realizar pruebas con muestras reducidas antes de lanzar
+la carga completa (la cual toma cerca de 30 minutos).
+
+**Demostración paso a paso:**
+El archivo notebooks/01_pipeline_extraccion.ipynb muestra
+el funcionamiento del pipeline sobre una muestra de 300 registros
+con fines meramente explicativos y pedagógicos.
+
+---
+
+### Step 4: Consultas analíticas, bibliotecas y visualizaciones
+
+Abre el entorno interactivo de Jupyter Notebook:
+
 jupyter notebook notebooks/02_consultas.ipynb
-```
 
-Resuelve las 15 consultas obligatorias + 2 propias, genera bibliotecas FASTA de
-ejemplo (`data/libraries/`) y las 4 visualizaciones de la sección 4.5
-(`docs/article/figures/`). Para generar todas las bibliotecas (las de reino son
-pesadas, decenas-cientos de MB, y no se versionan en git):
+Este cuaderno resuelve las 15 consultas obligatorias del taller
+más las 2 preguntas de investigación propias planteadas.
 
-```bash
+- Genera automáticamente las bibliotecas FASTA de muestra en:
+  data/libraries/
+- Construye las 4 figuras estadísticas ubicadas en:
+  docs/article/figures/
+
+Para generar todas las bibliotecas masivas de reinos:
+
 python scripts/generate_libraries.py
-```
 
-### 5. Ejecutar la evaluación experimental
+---
 
-```bash
+### Step 5: Evaluación experimental de rendimiento
+
+Para ejecutar la comparativa entre el modelo embebido
+y la estrategia de colección separada sobre 30,000 registros:
+
 jupyter notebook notebooks/03_experimentos.ipynb
-```
 
-### 6. Compilar el artículo científico
+---
 
-```bash
-tectonic docs/article/article.tex   # o pdflatex + bibtex, con texlive/miktex
-```
+### Step 6: Compilación del artículo científico
 
-## Citación de los datos
+Para compilar el documento final en LaTeX:
 
-1. Orozco-Arias S, Ferrer-Pomer I, Rodrigues de Goes F, Gaviria-Orrego S, Gómiz-Fernández J,
-   Llatser-Torres J, Paschoal AR, Guyot R, Gabaldón T. (2026). *PanTEon: a cross-kingdom
-   framework to guide the design of transposable element classifiers*. bioRxiv.
+tectonic docs/article/article.tex   # O mediante pdflatex + bibtex
+
+---
+
+## Citación oficial de los datos utilizados
+
+1. Orozco-Arias S, Ferrer-Pomer I, Rodrigues de Goes F, Gaviria-Orrego S, Gómiz-Fernández J, Llatser-Torres J, Paschoal AR, Guyot R, Gabaldón T. (2026). PanTEon: a cross-kingdom framework to guide the design of transposable element classifiers. bioRxiv.
    https://doi.org/10.64898/2026.04.01.715927
-2. PanTEon Database v1.6.1. Zenodo. https://zenodo.org/records/19372616
+
+2. PanTEon Database v1.6.1. Zenodo.
+   https://zenodo.org/records/19372616
 
 ## Estado del proyecto
 
