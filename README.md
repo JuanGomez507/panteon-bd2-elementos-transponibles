@@ -59,7 +59,7 @@ y ubícalos directamente en la raíz del proyecto:
 
 ---
 
-### Step 1: Clonar el repositorio y preparar entorno virtual
+### Paso 1: Clonar el repositorio y preparar entorno virtual
 
 Abre tu terminal de comandos e ingresa los siguientes pasos:
 
@@ -71,7 +71,7 @@ pip install -r requirements.txt
 
 ---
 
-### Step 2: Descargar y posicionar los archivos de entrada
+### Paso 2: Descargar y posicionar los archivos de entrada
 
 Descargar los dos archivos desde el enlace de Zenodo
 y colocarlos en la carpeta raíz del proyecto:
@@ -81,7 +81,7 @@ y colocarlos en la carpeta raíz del proyecto:
 
 ---
 
-### Step 3: Inicializar esquemas y ejecutar la carga masiva
+### Paso 3: Inicializar esquemas y ejecutar la carga masiva
 
 Para construir las colecciones en MongoDB, aplicar la validación
 de esquemas mediante $jsonSchema e indexar los campos clave,
@@ -103,7 +103,7 @@ con fines meramente explicativos y pedagógicos.
 
 ---
 
-### Step 4: Consultas analíticas, bibliotecas y visualizaciones
+### Paso 4: Consultas analíticas, bibliotecas y visualizaciones
 
 Abre el entorno interactivo de Jupyter Notebook:
 
@@ -123,7 +123,7 @@ python scripts/generate_libraries.py
 
 ---
 
-### Step 5: Evaluación experimental de rendimiento
+### Paso 5: Evaluación experimental de rendimiento
 
 Para ejecutar la comparativa entre el modelo embebido
 y la estrategia de colección separada sobre 30,000 registros:
@@ -132,7 +132,7 @@ jupyter notebook notebooks/03_experimentos.ipynb
 
 ---
 
-### Step 6: Compilación del artículo científico
+### Paso 6: Compilación del artículo científico
 
 Para compilar el documento final en LaTeX:
 
